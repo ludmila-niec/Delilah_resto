@@ -25,7 +25,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, async () => {
     console.log("Servidor iniciado en el puerto " + PORT);
 
-    //conecxion a la base de datos
+    //conexion a la base de datos
     try{
         await sequelize.authenticate()
         console.log('Conectado a la base de datos Delilah');
