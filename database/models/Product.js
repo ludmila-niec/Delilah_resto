@@ -4,7 +4,7 @@ const sequelize = require("../db");
 const Product = sequelize.define(
     "Product",
     {
-        id: {
+        product_id: {
             type: DataTypes.INTEGER,
             allownull: false,
             autoIncrement: true,
@@ -56,4 +56,3 @@ const Product = sequelize.define(
 );
 
 module.exports = Product;
-
