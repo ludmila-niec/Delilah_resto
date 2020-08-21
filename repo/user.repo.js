@@ -83,5 +83,18 @@ module.exports = {
 
         return null;
     },
+    getUserById: async (id) =>{
+        try{
+
+            let user = await User.findByPk(id)
+            if(!user){
+                throw new Error ('No se encontró el usuario')
+            }
+            return user
+        }catch(error){
+            console.log(error);
+        }
+
+    }
     
 };

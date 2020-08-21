@@ -29,7 +29,7 @@ module.exports = {
             let token = jwt.sign({ id: userExists.user_id }, process.env.TOKEN_SECRET, {
                 expiresIn: "1h",
             });
-            return res.header("auth-token", token).json({success:true, message:"Login exitoso",token});
+            return res.status(200).json({success:true, message:"Login exitoso",token});
         } catch (error) {
             console.log(error);
         }
