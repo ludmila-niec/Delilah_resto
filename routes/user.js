@@ -1,12 +1,13 @@
 const router = require("express").Router();
 const User = require("../database/models/User");
+const { authAdmin, authUser } = require("../middleware/auth");
+const { getUserData, getOneUser } = require("../service/user");
 
-//accesible solo admin ver todos. Ver uno, user
-//retornar un user con id por scope de sesion req.user(user_id)
-router.get("/", async (req, res) => {
-    let listUsers = await User.findAll();
-    res.json(listUsers);
-});
+//admin puede ver todos los usuarios
+//usuario solo puede ver sus datos
+router.get("/", authUser, getUserData);
 
+//admin puede buscar usuario en particular
+router.get('/:userid', authAdmin, getOneUser)
 
 module.exports = router;

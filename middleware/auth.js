@@ -3,26 +3,30 @@ const { getUserById } = require("../repo/user.repo");
 // check token en headers
 module.exports = {
     authUser: async (req, res, next) => {
-        const token = req.header("auth-token").split(' ')[1]
         try {
+            const token = req.header("auth-token").split(" ")[1];
             let user = await jwt.verify(token, process.env.TOKEN_SECRET);
-            req.user = user.id;
+            req.userId = user.id;
             return next();
         } catch (error) {
             return res
                 .status(401)
-                .send("Necesitas Token para acceder a este contenido" + "\n"+ error);
+                .send("Necesitas Token para acceder a este contenido");
         }
     },
     authAdmin: async (req, res, next) => {
-        const token = req.header("auth-token").split(" ")[1];
-       
         try {
+            const token = req.header("auth-token").split(" ")[1];
             let user = await jwt.verify(token, process.env.TOKEN_SECRET);
+            req.userId = user.id;
             //buscar usuario por id
             let findUser = await getUserById(user.id);
+            if (!findUser) {
+                return res.status(404).send("No se encontró el id del usuario");
+            }
             //check si tiene rol de admin(1)
             if (findUser.role === 1) {
+                req.userRole = 1;
                 return next();
             } else {
                 return res
@@ -34,7 +38,7 @@ module.exports = {
         } catch (error) {
             return res
                 .status(401)
-                .send("Necesitas Token para acceder a este contenido" + error);
+                .send("Necesitas Token para acceder a este contenido");
         }
     },
 };
