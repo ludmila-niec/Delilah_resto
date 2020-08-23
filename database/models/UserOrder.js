@@ -27,6 +27,22 @@ const UserOrder = sequelize.define(
             defaultValue: 1,
             allowNull: false,
         },
+        payment: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: Payment,
+                key: "payment_id",
+            },
+        },
+        user: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: User,
+                key: "user_id",
+            },
+        },
         delivery_adress: {
             type: DataTypes.STRING,
             allowNull: false,

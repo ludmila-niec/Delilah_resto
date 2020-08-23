@@ -30,11 +30,11 @@ const ProductOrder = sequelize.define(
     }
 );
 
-UserOrder.belongsToMany(Product, {
-    through:ProductOrder
-});
-Product.belongsToMany(UserOrder, {
-    through: ProductOrder
-});
+// UserOrder.belongsToMany(Product, {
+//     through:ProductOrder
+// });
+// Product.belongsToMany(UserOrder, {
+//     through: ProductOrder
+// });
 
 module.exports = ProductOrder;
