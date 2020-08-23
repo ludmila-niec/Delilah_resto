@@ -1,12 +1,10 @@
 module.exports = {
-
-    database:{
+    database: {
         username: "root",
         password: "",
-        database: "delilah",
-        host: "localhost"
-    }
-}
+        database: "testdelilah",
+        host: "localhost",
+    },
+};
 
 //crear admin
-

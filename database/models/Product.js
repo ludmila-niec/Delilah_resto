@@ -49,7 +49,7 @@ const Product = sequelize.define(
         },
     },
     {
-        tablename: "products",
+        tableName: "products",
         createdAt: false,
         updatedAt: false,
     }

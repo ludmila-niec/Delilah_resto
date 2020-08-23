@@ -89,6 +89,7 @@ module.exports = {
             if (!user) {
                 throw new Error("No se encontró el usuario");
             }
+            //devolver todos los atributos menos id y role
             return user;
         } catch (error) {
             console.log(error);

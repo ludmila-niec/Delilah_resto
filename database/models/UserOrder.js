@@ -1,37 +1,42 @@
-const { DataTypes, Sequelize } = require("sequelize");
+const { DataTypes } = require("sequelize");
 const sequelize = require("../db");
+const Payment = require("./Payments");
+const User = require("./User");
 
-const UserOrder = sequelize.define("user_Order", {
-    order_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
+const UserOrder = sequelize.define(
+    "userOrder",
+    {
+        order_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            autoIncrement: true,
+            primaryKey: true,
+        },
+        order_date: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            allowNull: false,
+        },
+        status: {
+            type: DataTypes.STRING,
+            defaultValue: "Nuevo",
+            allowNull: false,
+        },
+        items_quantity: {
+            type: DataTypes.INTEGER,
+            defaultValue: 1,
+            allowNull: false,
+        },
+        delivery_adress: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
     },
-    order_date: {
-        type: DataTypes.DATETIME,
-        defaultValue: Sequelize.NOW,
-    },
-    status: {
-        type: DataTypes.STRING,
-        defaultValue: "Nuevo",
-    },
-    items_quantity: {
-        type: DataTypes.INTEGER,
-        defaultValue: 1,
-    },
-    payment_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-    },
-    user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-    },
-    delivery_adress: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-});
+    {
+        tableName: "user_orders",
+        createdAt: false,
+        updatedAt: false,
+    }
+);
 
 module.exports = UserOrder;

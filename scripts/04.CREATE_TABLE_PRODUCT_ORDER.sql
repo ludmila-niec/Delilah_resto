@@ -14,7 +14,7 @@ INSERT INTO product_orders VALUES (1,3,310)
 CREATE TABLE product_orders (
     order_id INT NOT NULL,
     product_id INT NOT NULL,
-    CONSTRAINT FK_userOrder FOREIGN KEY (order_id),
+    CONSTRAINT FK_userOrder FOREIGN KEY (order_id)
     REFERENCES user_orders (order_id),
     CONSTRAINT FK_product FOREIGN KEY (product_id)
     REFERENCES products (product_id)

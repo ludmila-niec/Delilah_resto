@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db");
+const UserOrder = require("./UserOrder");
 
 const User = sequelize.define(
     "User",
@@ -43,10 +44,11 @@ const User = sequelize.define(
         role: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
+            allowNull: false,
         },
     },
     {
-        tablename: "users",
+        tableName: "users",
         createdAt: false,
         updatedAt: false,
     }
