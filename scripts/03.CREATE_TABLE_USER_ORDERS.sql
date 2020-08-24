@@ -30,15 +30,16 @@ INNER JOIN products on product_orders.product_id=products.product_id
 
 CREATE TABLE user_orders (
     order_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    datetime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    status VARCHAR(50) NOT NULL DEFAULT "Nuevo",
+    order_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(150) NOT NULL DEFAULT "Nuevo",
     items_quantity INT NOT NULL DEFAULT 1,
-    payment INT NOT NULL,
+    payment_method VARCHAR(150) NOT NULL,
+    ticket INT NOT NULL,
     user INT NOT NULL,
     delivery_adress VARCHAR(255) NOT NULL,
     CONSTRAINT FK_userOrder FOREIGN KEY (user)
     REFERENCES users (user_id),
-    CONSTRAINT FK_paymentOrder FOREIGN KEY (payment)
-    REFERENCES payments (payment_id)
+    -- CONSTRAINT FK_paymentOrder FOREIGN KEY (payment)
+    -- REFERENCES payments (payment_id)
 
 )

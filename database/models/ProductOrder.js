@@ -6,6 +6,12 @@ const Product = require("./Product");
 const ProductOrder = sequelize.define(
     "productOrders",
     {
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+            allowNull: false,
+        },
         order_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
