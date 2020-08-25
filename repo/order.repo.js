@@ -2,6 +2,7 @@ const UserOrder = require("../database/models/UserOrder");
 const ProductOrder = require("../database/models/ProductOrder");
 const Product = require("../database/models/Product");
 
+
 module.exports = {
     getAllOrders: async () => {
         try {
@@ -14,11 +15,7 @@ module.exports = {
     getOrder: async (id) => {
         //para role usuario algunos datos
         try {
-            // let order = await UserOrder.findOne({
-            //     attributes:["status","payment_method","ticket","delivery_adress"],
-            //     where:{order_id:id}
-            // });
-            let order = await UserOrder.findOne({
+            let order = await UserOrder.findAll({
                 attributes: [
                     "status",
                     "payment_method",
@@ -26,19 +23,21 @@ module.exports = {
                     "delivery_adress",
                 ],
                 where: { order_id: id },
-                // include: {
-                //     model: ProductOrder,
-                //     as: "Details",
-                //     attributes: [],
-                //     include: {
-                //         model: Product,
-                //         attributes: ["name", "price"],
-                //     },
-                // },
-                // }).then(order => {
-                //     let productDetail = await ProductOrder.findAll({where: {order_id:id}})
-                // })
+                include: [
+                    {
+                        model: Product,
+                        as: "products",
+                        attributes: ["name", "price"],
+                        required: false,
+                        through: {
+                            model: ProductOrder,
+                            as: "ProductOrders",
+                            attributes: ["product_quantity"],
+                        },
+                    },
+                ],
             });
+            console.log("orden final");
             console.log(order);
             return order;
         } catch (error) {
@@ -47,9 +46,7 @@ module.exports = {
     },
     saveOrder: async (order, userId) => {
         try {
-            const itemsQuantity = order.detail.length;
             let userOrder = await UserOrder.create({
-                items_quantity: itemsQuantity,
                 payment_method: order.payment_method,
                 ticket: order.ticket,
                 user: userId,
@@ -63,20 +60,19 @@ module.exports = {
     },
     saveProductOrder: async (orderId, products) => {
         try {
-            let productOrderCreated;
             products.forEach(async (item) => {
-                //buscar id del producto
-                let productInfo = await Product.findOne({
-                    where: { name: item },
-                });
-                console.log("id del producto");
-                console.log(productId);
-                productOrderCreated = await ProductOrder.create({
+                let productId = await Product.findByPk(item.id);
+                if (!productId) {
+                    return false;
+                }
+               
+                const orderCreated = await ProductOrder.create({
                     order_id: orderId,
-                    product_id: productInfo.dataValues.product_id
+                    product_id: item.id,
+                    product_quantity: item.quantity,
                 });
+                console.log(orderCreated);
             });
-            return productOrderCreated
         } catch (error) {
             console.log(error);
         }

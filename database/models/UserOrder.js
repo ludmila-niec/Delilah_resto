@@ -22,11 +22,6 @@ const UserOrder = sequelize.define(
             defaultValue: "Nuevo",
             allowNull: false,
         },
-        items_quantity: {
-            type: DataTypes.INTEGER,
-            defaultValue: 1,
-            allowNull: false,
-        },
         payment_method: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -34,14 +29,6 @@ const UserOrder = sequelize.define(
         ticket: {
             type: DataTypes.INTEGER,
             allowNull: false,
-        },
-        user: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            // references: {
-            //     model: User,
-            //     key: "user_id",
-            // },
         },
         delivery_adress: {
             type: DataTypes.STRING,

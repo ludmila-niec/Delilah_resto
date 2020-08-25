@@ -2,31 +2,24 @@ const { DataTypes, Sequelize } = require("sequelize");
 const sequelize = require("../db");
 const UserOrder = require("./UserOrder");
 const Product = require("./Product");
+const { database } = require("../../config");
 
 const ProductOrder = sequelize.define(
-    "productOrders",
+    "ProductOrders",
     {
-        id: {
+        // order_id: {
+        //     type: DataTypes.INTEGER,
+        //     allowNull: false,
+        //     unique: false,
+        // },
+        // product_id: {
+        //     type: DataTypes.INTEGER,
+        //     allowNull: false,
+        //     unique: false,
+        // },
+        product_quantity: {
             type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
-            allowNull: false,
-        },
-        order_id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-                model: UserOrder,
-                key: "order_id",
-            },
-        },
-        product_id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-                model: Product,
-                key: "product_id",
-            },
+            defaultValue: 1,
         },
     },
     {
@@ -35,12 +28,5 @@ const ProductOrder = sequelize.define(
         updatedAt: false,
     }
 );
-
-// UserOrder.belongsToMany(Product, {
-//     through:ProductOrder
-// });
-// Product.belongsToMany(UserOrder, {
-//     through: ProductOrder
-// });
 
 module.exports = ProductOrder;

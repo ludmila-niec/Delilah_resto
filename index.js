@@ -48,7 +48,8 @@ app.listen(PORT, async () => {
 
     //conexion a la base de datos
     try {
-        await sequelize.authenticate();
+        // await sequelize.authenticate();
+        await sequelize.sync({ force: false });
         console.log("Conectado a la base de datos Delilah");
     } catch (error) {
         console.log(
