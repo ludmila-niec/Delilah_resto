@@ -4,6 +4,10 @@ const sequelize = require("../db");
 const ProductOrder = sequelize.define(
     "ProductOrders",
     {
+        product_price: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
         product_quantity: {
             type: DataTypes.INTEGER,
             defaultValue: 1,
@@ -11,8 +15,6 @@ const ProductOrder = sequelize.define(
     },
     {
         tableName: "product_orders",
-        createdAt: false,
-        updatedAt: false,
     }
 );
 
