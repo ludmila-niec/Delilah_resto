@@ -5,6 +5,7 @@ const {
     saveOrder,
     saveProductOrder,
     changeStatus,
+    deleteOrderById
 } = require("../repo/order.repo");
 
 module.exports = {
@@ -84,7 +85,25 @@ module.exports = {
                 message: "Estado de la orden actualizada",
             });
         } catch (error) {
-            res.status(500).send("Error en el servidor " + error);
+            res.status(500).send(`Error en el servidor. ${error}`);
+        }
+    },
+    deleteOrder: async (req, res) => {
+        try {
+            let orderId = req.params.orderid;
+            let orderDeleted = await deleteOrderById(orderId);
+            if (orderDeleted === 0) {
+                return res.status(400).json({
+                    success: false,
+                    message: "No se encontró el id de la orden",
+                });
+            }
+            res.status(200).json({
+                success: true,
+                message: `Numero de orden ${orderId} eliminada`,
+            });
+        } catch (error) {
+            res.status(500).send(`Error en el servidor. ${error}`);
         }
     },
 };

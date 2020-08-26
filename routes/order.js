@@ -4,6 +4,7 @@ const {
     getOneOrder,
     createOrder,
     updateStatus,
+    deleteOrder,
 } = require("../service/order");
 const { authAdmin, authUser } = require("../middleware/auth");
 // const Product = require("../database/models/Product");
@@ -30,5 +31,5 @@ router.patch("/:orderid", authAdmin, updateStatus);
 
 //cancelar pedido
 //accesible solo admin
-router.delete("/:orderid", (req, res) => {});
+router.delete("/:orderid", authAdmin, deleteOrder);
 module.exports = router;

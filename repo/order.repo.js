@@ -5,6 +5,7 @@ const { Op } = require("sequelize");
 const Payment = require("../database/models/Payments");
 const User = require("../database/models/User");
 const OrderStatus = require("../database/models/OrderStatus");
+const order = require("../service/order");
 
 module.exports = {
     getAllOrders: async () => {
@@ -132,17 +133,34 @@ module.exports = {
         }
     },
     changeStatus: async (orderId, status) => {
-        let orderUpdated = await UserOrder.update(
-            {
-                status_id: status,
-            },
-            {
+        try {
+            let orderUpdated = await UserOrder.update(
+                {
+                    status_id: status,
+                },
+                {
+                    where: {
+                        order_id: orderId,
+                    },
+                }
+            );
+            console.log(orderUpdated);
+            return orderUpdated;
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    deleteOrderById: async (orderId) => {
+        try {
+            let orderDeleted = await UserOrder.destroy({
                 where: {
                     order_id: orderId,
                 },
-            }
-        );
-        console.log(orderUpdated);
-        return orderUpdated
+            });
+            console.log(orderDeleted);
+            return orderDeleted;
+        } catch (error) {
+            console.log(error);
+        }
     },
 };
