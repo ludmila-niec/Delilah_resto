@@ -26,7 +26,6 @@ module.exports = {
             }
             //check si tiene rol de admin(1)
             if (findUser.isAdmin === true) {
-                // req.isAdmin = true;
                 return next();
             } else {
                 return res

@@ -87,11 +87,11 @@ module.exports = {
         //     },
         // });
 
-        return realUser
+        return realUser;
     },
     getUserById: async (id) => {
         try {
-            let user = await User.findByPk(id);
+            let user = await User.findByPk(id)
             if (!user) {
                 throw new Error("No se encontró el usuario");
             }
@@ -101,12 +101,33 @@ module.exports = {
             console.log(error);
         }
     },
+    getUserDetails: async (id) =>{
+        try{
+
+            let user = await User.findOne({
+                where: { user_id: id },
+                attributes: [
+                    "username",
+                    "password",
+                    "firstName",
+                    "lastName",
+                    "email",
+                    "phone",
+                    "adress",
+                ],
+            });
+            return user
+        }catch(error){
+            console.log(error);
+        }
+    },
     getAllUsers: async () => {
         try {
             let users = await User.findAll();
             return users;
         } catch (error) {
             console.log(error);
+           
         }
     },
 };
