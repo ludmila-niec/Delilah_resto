@@ -1,6 +1,7 @@
 const {
     getAllOrders,
     getOrder,
+    checkRealProduct,
     saveOrder,
     saveProductOrder,
 } = require("../repo/order.repo");
@@ -17,11 +18,12 @@ module.exports = {
     getOneOrder: async (req, res) => {
         try {
             let orderId = req.params.orderid;
-            let orderById = await getOrder(orderId);
+            let userId = req.userId;
+            let orderById = await getOrder(orderId, userId);
             if (!orderById) {
                 return res.status(404).json({
                     success: false,
-                    message: "No se encontre la orden",
+                    message: "No se encontró el pedido",
                 });
             }
             res.status(200).json({ success: true, data: orderById });
@@ -35,7 +37,17 @@ module.exports = {
             console.log("id del usuario");
             console.log(userId);
             let body = req.body;
-            //validaciones antes de enviar el body
+            //validaciones antes de enviar el body(si no estan vacios)
+            //checkear que los id de los productos existan antes de guardar la orden
+            // let productExists = await checkRealProduct(body.detail);
+            // console.log("check producto existe");
+            // console.log(productExists);
+            // if (!productExists) {
+            //     return res.status(404).json({
+            //         success: false,
+            //         message: "No se encontró el producto",
+            //     });
+            // }
             //guardar user order
             let orderCreated = await saveOrder(body, userId);
             let orderId = orderCreated.order_id;
@@ -45,13 +57,11 @@ module.exports = {
                 orderId,
                 productDetail
             );
-            console.log("detalle de los productos");
-            console.log((productOrderCreated));
             //en las respuesta agregar el numero de orden para seguir
             res.status(201).json({
                 success: true,
                 message: "Recibimos tu pedido",
-                data: orderCreated,
+                nro_pedido: orderCreated.order_id,
             });
         } catch (error) {
             res.status(500).send("Error en el servidor");

@@ -5,7 +5,7 @@ const { authAdmin, authUser } = require("../middleware/auth");
 
 //retornar todas las ordenes
 //accesible solo admin
-router.get("/", getOrders);
+router.get("/", authAdmin, getOrders);
 
 //retornar 1 pedido
 //accesible user (solo si es su pedido) y admin
