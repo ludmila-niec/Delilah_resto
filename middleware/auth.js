@@ -4,19 +4,19 @@ const { getUserById } = require("../repo/user.repo");
 module.exports = {
     authUser: async (req, res, next) => {
         try {
-            const token = req.header("auth-token").split(" ")[1];
+            const token = req.header("Authorization").split(" ")[1];
             let user = await jwt.verify(token, process.env.TOKEN_SECRET);
             req.userId = user.id;
             return next();
         } catch (error) {
             return res
                 .status(401)
-                .send("Necesitas Token para acceder a este contenido");
+                .send("Necesitas autenticarte para acceder a este contenido");
         }
     },
     authAdmin: async (req, res, next) => {
         try {
-            const token = req.header("auth-token").split(" ")[1];
+            const token = req.header("Authorization").split(" ")[1];
             let user = await jwt.verify(token, process.env.TOKEN_SECRET);
             req.userId = user.id;
             //buscar usuario por id
@@ -37,7 +37,7 @@ module.exports = {
         } catch (error) {
             return res
                 .status(401)
-                .send("Necesitas Token para acceder a este contenido");
+                .send("Necesitas Autenticarte para acceder a este contenido");
         }
     },
 };

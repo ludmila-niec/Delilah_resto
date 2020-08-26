@@ -4,6 +4,7 @@ const {
     checkRealProduct,
     saveOrder,
     saveProductOrder,
+    changeStatus,
 } = require("../repo/order.repo");
 
 module.exports = {
@@ -64,7 +65,26 @@ module.exports = {
                 nro_pedido: orderCreated.order_id,
             });
         } catch (error) {
-            res.status(500).send("Error en el servidor");
+            res.status(500).send("Error en el servidor " + error);
+        }
+    },
+    updateStatus: async (req, res) => {
+        try {
+            let orderId = req.params.orderid;
+            let status = req.body.status_id;
+            let orderUpdated = await changeStatus(orderId, status);
+            if (orderUpdated[0] === 0) {
+                return res.status(400).json({
+                    success: false,
+                    message: "No se encontró el id de la orden",
+                });
+            }
+            res.status(200).json({
+                success: true,
+                message: "Estado de la orden actualizada",
+            });
+        } catch (error) {
+            res.status(500).send("Error en el servidor " + error);
         }
     },
 };

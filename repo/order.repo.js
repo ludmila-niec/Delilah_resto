@@ -10,17 +10,34 @@ module.exports = {
     getAllOrders: async () => {
         try {
             let orders = await UserOrder.findAll({
+                attributes: ["order_id"],
                 include: [
+                    {
+                        model: OrderStatus,
+                        attributes: ["name"],
+                    },
                     {
                         model: Product,
                         as: "products",
-                        attributes: ["name", "price"],
+                        attributes: ["name"],
                         required: false,
                         through: {
                             model: ProductOrder,
                             as: "ProductOrders",
-                            attributes: ["product_quantity"],
+                            attributes: ["product_price", "product_quantity"],
                         },
+                    },
+                    { model: Payment, attributes: ["name"] },
+                    {
+                        model: User,
+                        attributes: [
+                            "adress",
+                            "firstName",
+                            "lastName",
+                            "username",
+                            "email",
+                            "phone",
+                        ],
                     },
                 ],
             });
@@ -113,5 +130,19 @@ module.exports = {
         } catch (error) {
             console.log(error);
         }
+    },
+    changeStatus: async (orderId, status) => {
+        let orderUpdated = await UserOrder.update(
+            {
+                status_id: status,
+            },
+            {
+                where: {
+                    order_id: orderId,
+                },
+            }
+        );
+        console.log(orderUpdated);
+        return orderUpdated
     },
 };

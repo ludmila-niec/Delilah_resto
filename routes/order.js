@@ -1,5 +1,10 @@
 const router = require("express").Router();
-const { getOrders, getOneOrder, createOrder } = require("../service/order");
+const {
+    getOrders,
+    getOneOrder,
+    createOrder,
+    updateStatus,
+} = require("../service/order");
 const { authAdmin, authUser } = require("../middleware/auth");
 // const Product = require("../database/models/Product");
 
@@ -21,7 +26,7 @@ router.put("/:orderid", async (req, res) => {});
 
 //modificar estado del pedido
 //accesible solo admin
-router.patch("/:orderid", async (req, res) => {});
+router.patch("/:orderid", authAdmin, updateStatus);
 
 //cancelar pedido
 //accesible solo admin
