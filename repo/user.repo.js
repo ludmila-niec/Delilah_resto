@@ -1,4 +1,5 @@
 const User = require("../database/models/User");
+const { Op } = require("sequelize");
 
 module.exports = {
     //checkea si el username ya esta registrado
@@ -80,8 +81,13 @@ module.exports = {
             });
             return userExists;
         }
+        // const realUser = await User.findOne({
+        //     where: {
+        //         [Op.or]: [{ username: data.user }, { email: data.user }],
+        //     },
+        // });
 
-        return null;
+        return realUser
     },
     getUserById: async (id) => {
         try {

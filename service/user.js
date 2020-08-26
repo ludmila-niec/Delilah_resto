@@ -5,11 +5,11 @@ module.exports = {
         try {
             let userId = req.userId;
             let userData = await getUserById(userId);
-            if (userData.role === 0) {
+            if (userData.isAdmin === false) {
                 return res.status(200).json({ success: true, data: userData });
             }
             //si es admin, retorna todos los usuarios
-            if (userData.role === 1) {
+            if (userData.isAdmin === true) {
                 let allUsers = await getAllUsers();
                 return res.status(200).json({ success: true, data: allUsers });
             }

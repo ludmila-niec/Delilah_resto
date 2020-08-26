@@ -3,7 +3,9 @@ const Product = require("../database/models/Product");
 module.exports = {
     getProducts: async function () {
         try {
-            let products = await Product.findAll();
+            let products = await Product.findAll({
+                attributes:["name","price"]
+            });
             return products;
         } catch (error) {
             console.log(error);

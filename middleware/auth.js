@@ -25,8 +25,8 @@ module.exports = {
                 return res.status(404).send("No se encontró el id del usuario");
             }
             //check si tiene rol de admin(1)
-            if (findUser.role === 1) {
-                req.userRole = 1;
+            if (findUser.isAdmin === true) {
+                // req.isAdmin = true;
                 return next();
             } else {
                 return res

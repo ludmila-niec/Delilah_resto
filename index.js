@@ -3,6 +3,8 @@ const app = express();
 const sequelize = require("./database/db");
 const dotenv = require("dotenv");
 const Product = require("./database/models/Product");
+const OrderStatus = require("./database/models/OrderStatus");
+const Payment = require("./database/models/Payments");
 require("./database/models/associations");
 dotenv.config();
 
@@ -32,10 +34,26 @@ app.get("/", async (req, res) => {
             { name: "Sandwich Focaccia", price: 440 },
             { name: "Veggie Avocado", price: 310 },
         ]);
+        let status = await OrderStatus.bulkCreate([
+            { name: "NUEVO", code: "NEW" },
+            { name: "CONFIRMADO", code: "OK" },
+            { name: "PREPARANDO", code: "INPREP" },
+            { name: "ENVIANDO", code: "SHIP" },
+            { name: "ENTREGADO", code: "DELIV" },
+            { name: "CANCELADO", code: "CANCEL" },
+        ]);
+        let paymentMethod = await Payment.bulkCreate([
+            { name: "EFECTIVO", code: "EFT" },
+            { name: "DEBITO", code: "DBT" },
+            { name: "CREDITO", code: "CRDT" },
+            { name: "MERCADO PAGO", code: "MP" },
+        ]);
 
         res.json({
-            message: "Productos agregados a la base de datos",
-            data: products,
+            message: "DATA agregados a la base de datos",
+            productos: products,
+            order_status: status,
+            payment_method: paymentMethod,
         });
     } catch (error) {
         console.log(error);
@@ -49,7 +67,7 @@ app.listen(PORT, async () => {
     //conexion a la base de datos
     try {
         // await sequelize.authenticate();
-        await sequelize.sync()
+        await sequelize.sync();
         console.log("Conectado a la base de datos Delilah");
     } catch (error) {
         console.log(

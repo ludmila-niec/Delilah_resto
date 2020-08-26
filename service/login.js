@@ -5,6 +5,8 @@ const { validateRealUser } = require("../repo/user.repo");
 module.exports = {
     login: async (req, res) => {
         let user = req.body;
+        console.log("body en login");
+        console.log(user);
         try {
             //check si existe usuario registrado por username o email
             let userExists = await validateRealUser(user);

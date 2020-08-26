@@ -50,8 +50,6 @@ const Product = sequelize.define(
     },
     {
         tableName: "products",
-        createdAt: false,
-        updatedAt: false,
     }
 );
 

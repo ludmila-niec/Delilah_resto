@@ -21,7 +21,7 @@ const OrderStatus = sequelize.define(
                 "CANCELADO",
             ],
             allowNull: false,
-            defaultValue: "NUEVO",
+            // defaultValue: "NUEVO",
         },
         code: {
             type: DataTypes.ENUM,
