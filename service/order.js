@@ -1,16 +1,28 @@
 const {
     getAllOrders,
+    getUserOrders,
     getOrder,
     checkRealProduct,
     saveOrder,
     saveProductOrder,
     changeStatus,
-    deleteOrderById
+    deleteOrderById,
 } = require("../repo/order.repo");
+const { getUserById } = require("../repo/user.repo");
 
 module.exports = {
     getOrders: async (req, res) => {
         try {
+            //buscar usuario para saber si es tiene rol normal o admin
+            let user = await getUserById(req.userId);
+            //si es tiene rol normal, retornar sus ordenes pasadas
+            if (!user.dataValues.isAdmin) {
+                let userOrders = await getUserOrders(req.userId);
+                return res
+                    .status(200)
+                    .json({ success: true, data: userOrders });
+            }
+            //si es admin, retorna todas las ordenes
             let orders = await getAllOrders();
             res.status(200).json({ success: true, data: orders });
         } catch (error) {
@@ -36,20 +48,15 @@ module.exports = {
     createOrder: async (req, res) => {
         try {
             let userId = req.userId;
-            console.log("id del usuario");
-            console.log(userId);
             let body = req.body;
-            //validaciones antes de enviar el body(si no estan vacios)
             //checkear que los id de los productos existan antes de guardar la orden
-            // let productExists = await checkRealProduct(body.detail);
-            // console.log("check producto existe");
-            // console.log(productExists);
-            // if (!productExists) {
-            //     return res.status(404).json({
-            //         success: false,
-            //         message: "No se encontró el producto",
-            //     });
-            // }
+            let productValidacion = await checkRealProduct(body.detail);
+            if (productValidacion.length > 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "No se encontró el/los producto/s",
+                });
+            }
             //guardar user order
             let orderCreated = await saveOrder(body, userId);
             let orderId = orderCreated.order_id;
@@ -59,11 +66,11 @@ module.exports = {
                 orderId,
                 productDetail
             );
-            //en las respuesta agregar el numero de orden para seguir
+
             res.status(201).json({
                 success: true,
                 message: "Recibimos tu pedido",
-                nro_pedido: orderCreated.order_id,
+                order_num: orderCreated.order_id,
             });
         } catch (error) {
             res.status(500).send("Error en el servidor " + error);
@@ -77,7 +84,7 @@ module.exports = {
             if (orderUpdated[0] === 0) {
                 return res.status(400).json({
                     success: false,
-                    message: "No se encontró el id de la orden",
+                    message: "No se encontró el numero de orden",
                 });
             }
             res.status(200).json({

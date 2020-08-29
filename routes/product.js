@@ -1,5 +1,4 @@
 const router = require("express").Router();
-const Product = require("../database/models/Product");
 const { authAdmin, authUser } = require("../middleware/auth");
 const {
     showProducts,

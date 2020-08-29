@@ -48,12 +48,8 @@ const User = sequelize.define(
     },
     {
         tableName: "users",
-        createdAt: false,
-        updatedAt: false,
     }
 );
 
 module.exports = User;
 
-//rol 0 = usuario
-//rol 1 = admin

@@ -7,11 +7,10 @@ const {
     deleteOrder,
 } = require("../service/order");
 const { authAdmin, authUser } = require("../middleware/auth");
-// const Product = require("../database/models/Product");
 
-//retornar todas las ordenes
-//accesible solo admin
-router.get("/", authAdmin, getOrders);
+//accesible solo admin retornar todas las ordenes
+//user solo sus ordenes pasadas
+router.get("/", authUser, getOrders);
 
 //retornar 1 pedido
 //accesible user (solo si es su pedido) y admin
@@ -20,10 +19,6 @@ router.get("/:orderid", authUser, getOneOrder);
 //crear pedido
 //accesible user y admin
 router.post("/", authUser, createOrder);
-
-//modificar pedido
-//accesible solo admin
-router.put("/:orderid", async (req, res) => {});
 
 //modificar estado del pedido
 //accesible solo admin

@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { getUserById } = require("../repo/user.repo");
-// check token en headers
+
 module.exports = {
     authUser: async (req, res, next) => {
         try {
@@ -24,12 +24,11 @@ module.exports = {
             if (!findUser) {
                 return res.status(404).send("No se encontró el id del usuario");
             }
-            //check si tiene rol de admin(1)
-            if (findUser.isAdmin === true) {
+            if (findUser.isAdmin) {
                 return next();
             } else {
                 return res
-                    .status(401)
+                    .status(403)
                     .send(
                         "No tenes autorización para acceder a este contenido"
                     );

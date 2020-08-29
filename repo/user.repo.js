@@ -1,5 +1,4 @@
 const User = require("../database/models/User");
-const { Op } = require("sequelize");
 
 module.exports = {
     //checkea si el username ya esta registrado
@@ -81,12 +80,6 @@ module.exports = {
             });
             return userExists;
         }
-        // const realUser = await User.findOne({
-        //     where: {
-        //         [Op.or]: [{ username: data.user }, { email: data.user }],
-        //     },
-        // });
-
         return realUser;
     },
     getUserById: async (id) => {
@@ -95,7 +88,6 @@ module.exports = {
             if (!user) {
                 throw new Error("No se encontró el usuario");
             }
-            //devolver todos los atributos menos id y role
             return user;
         } catch (error) {
             console.log(error);

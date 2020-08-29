@@ -23,30 +23,31 @@ app.use("/api/orders", orderRoutes);
 
 const PORT = process.env.PORT || 3000;
 
+//ubicar en file aparte para insertar registros + authAdmin
 app.get("/", async (req, res) => {
     try {
         let products = await Product.bulkCreate([
-            { name: "Bagel de sálmon", price: 425 },
-            { name: "Hamburguesa Clasica", price: 350 },
-            { name: "Sandwich Veggie", price: 310 },
-            { name: "Ensalada Veggie", price: 310 },
-            { name: "Focaccia", price: 300 },
-            { name: "Sandwich Focaccia", price: 440 },
-            { name: "Veggie Avocado", price: 310 },
+            { product_id: 1, name: "Bagel de sálmon", price: 425 },
+            { product_id: 2, name: "Hamburguesa Clasica", price: 350 },
+            { product_id: 3, name: "Sandwich Veggie", price: 310 },
+            { product_id: 4, name: "Ensalada Veggie", price: 310 },
+            { product_id: 5, name: "Focaccia", price: 300 },
+            { product_id: 6, name: "Sandwich Focaccia", price: 440 },
+            { product_id: 7, name: "Veggie Avocado", price: 310 },
         ]);
         let status = await OrderStatus.bulkCreate([
-            { name: "NUEVO", code: "NEW" },
-            { name: "CONFIRMADO", code: "OK" },
-            { name: "PREPARANDO", code: "INPREP" },
-            { name: "ENVIANDO", code: "SHIP" },
-            { name: "ENTREGADO", code: "DELIV" },
-            { name: "CANCELADO", code: "CANCEL" },
+            { id: 1, name: "NUEVO", code: "NEW" },
+            { id: 2, name: "CONFIRMADO", code: "OK" },
+            { id: 3, name: "PREPARANDO", code: "INPREP" },
+            { id: 4, name: "ENVIANDO", code: "SHIP" },
+            { id: 5, name: "ENTREGADO", code: "DELIV" },
+            { id: 6, name: "CANCELADO", code: "CANCEL" },
         ]);
         let paymentMethod = await Payment.bulkCreate([
-            { name: "EFECTIVO", code: "EFT" },
-            { name: "DEBITO", code: "DBT" },
-            { name: "CREDITO", code: "CRDT" },
-            { name: "MERCADO PAGO", code: "MP" },
+            { payment_id: 1, name: "EFECTIVO", code: "EFT" },
+            { payment_id: 2, name: "DEBITO", code: "DBT" },
+            { payment_id: 3, name: "CREDITO", code: "CRDT" },
+            { payment_id: 4, name: "MERCADO PAGO", code: "MP" },
         ]);
 
         res.json({
@@ -57,6 +58,7 @@ app.get("/", async (req, res) => {
         });
     } catch (error) {
         console.log(error);
+        res.status(400).json({ Error: "Los datos ya fueron cargados" });
     }
 });
 

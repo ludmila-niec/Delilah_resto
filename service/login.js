@@ -26,7 +26,6 @@ module.exports = {
                     success:false, message: "La contraseña ingresada es incorrecta",
                 });
             }
-            //si hay match user + pasword
             //generar token
             let token = jwt.sign({ id: userExists.user_id }, process.env.TOKEN_SECRET, {
                 expiresIn: "1h",

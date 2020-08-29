@@ -4,7 +4,7 @@ module.exports = {
     getProducts: async function () {
         try {
             let products = await Product.findAll({
-                attributes:["name","price"]
+                attributes: ["product_id", "name", "price"],
             });
             return products;
         } catch (error) {
@@ -47,7 +47,7 @@ module.exports = {
                     product_id: id,
                 },
             });
-            return deleteProduct
+            return deleteProduct;
         } catch (error) {
             console.log(error);
         }

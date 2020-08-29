@@ -5,7 +5,6 @@ const { Op } = require("sequelize");
 const Payment = require("../database/models/Payments");
 const User = require("../database/models/User");
 const OrderStatus = require("../database/models/OrderStatus");
-const order = require("../service/order");
 
 module.exports = {
     getAllOrders: async () => {
@@ -47,12 +46,41 @@ module.exports = {
             console.log(error);
         }
     },
+    getUserOrders: async (userId) => {
+        try {
+            let userOrders = await UserOrder.findAll({
+                attributes: ["order_id"],
+                where: { user_id: userId },
+                include: [
+                    {
+                        model: OrderStatus,
+                        attributes: ["name"],
+                    },
+                    {
+                        model: Product,
+                        as: "products",
+                        attributes: ["name"],
+                        required: false,
+                        through: {
+                            model: ProductOrder,
+                            as: "ProductOrders",
+                            attributes: ["product_price", "product_quantity"],
+                        },
+                    },
+                    { model: Payment, attributes: ["name"] },
+                ],
+            });
+
+            return userOrders;
+        } catch (error) {
+            console.log(error);
+        }
+    },
     getOrder: async (orderId, userId) => {
         //Usuario solo puede consultar un numero de pedido que le pertenezca
         try {
             let order = await UserOrder.findAll({
                 attributes: [],
-                // where: { order_id: id },
                 where: {
                     [Op.and]: [{ order_id: orderId }, { user_id: userId }],
                 },
@@ -82,28 +110,32 @@ module.exports = {
             if (order.length === 0) {
                 return null;
             }
-            return order;
+            let orderAmount = await ProductOrder.sum("product_price", {
+                where: { order_id: orderId },
+            });
+            return { order, orderAmount };
         } catch (error) {
             console.log(error);
         }
     },
     checkRealProduct: async (products) => {
         try {
-            products.forEach(async (item) => {
-                let productId = await Product.findByPk(item.id);
+            let errors = [];
+            for (const product of products) {
+                let productId = await Product.findByPk(product.id);
                 if (!productId) {
-                    return null;
+                    errors.push(productId);
                 }
-            });
-        } catch (error) {
-            console.log(error);
+            }
+            return errors;
+        } catch (err) {
+            console.log(err);
         }
     },
     saveOrder: async (order, userId) => {
         try {
             let userOrder = await UserOrder.create({
                 payment_id: order.payment_method,
-                // user: userId,
                 user_id: userId,
             });
             return userOrder;
@@ -113,21 +145,16 @@ module.exports = {
     },
     saveProductOrder: async (orderId, products) => {
         try {
-            products.forEach(async (item) => {
-                let productData = await Product.findByPk(item.id);
-                if (!productData) {
-                    return null;
-                }
-                console.log("producto por id");
-                console.log(productData);
+            for (const product of products) {
+                let productData = await Product.findByPk(product.id);
                 const orderCreated = await ProductOrder.create({
                     product_price: productData.dataValues.price,
                     order_id: orderId,
-                    product_id: item.id,
-                    product_quantity: item.quantity,
+                    product_id: product.id,
+                    product_quantity: product.quantity,
                 });
-                console.log(orderCreated);
-            });
+            }
+            return true;
         } catch (error) {
             console.log(error);
         }
@@ -144,7 +171,6 @@ module.exports = {
                     },
                 }
             );
-            console.log(orderUpdated);
             return orderUpdated;
         } catch (error) {
             console.log(error);
@@ -157,7 +183,6 @@ module.exports = {
                     order_id: orderId,
                 },
             });
-            console.log(orderDeleted);
             return orderDeleted;
         } catch (error) {
             console.log(error);
