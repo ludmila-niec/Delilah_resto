@@ -6,6 +6,10 @@ const Product = require("./database/models/Product");
 const OrderStatus = require("./database/models/OrderStatus");
 const Payment = require("./database/models/Payments");
 require("./database/models/associations");
+const {
+    logErrors,
+    validatorError,
+} = require("./middleware/errorHandler");
 dotenv.config();
 
 //body parser
@@ -20,6 +24,10 @@ app.use("/", registerAndLogRoutes);
 app.use("/api/users", userRoute);
 app.use("/api/products", productRoute);
 app.use("/api/orders", orderRoutes);
+
+//error handlers
+// app.use(logErrors);
+app.use(validatorError);
 
 const PORT = process.env.PORT || 3000;
 

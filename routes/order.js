@@ -7,6 +7,10 @@ const {
     deleteOrder,
 } = require("../service/order");
 const { authAdmin, authUser } = require("../middleware/auth");
+const {
+    validateOrderInput,
+    validateStatusInput,
+} = require("../middleware/order");
 
 //accesible solo admin retornar todas las ordenes
 //user solo sus ordenes pasadas
@@ -18,13 +22,13 @@ router.get("/:orderid", authUser, getOneOrder);
 
 //crear pedido
 //accesible user y admin
-router.post("/", authUser, createOrder);
+router.post("/", validateOrderInput, authUser, createOrder);
 
 //modificar estado del pedido
 //accesible solo admin
-router.patch("/:orderid", authAdmin, updateStatus);
+router.patch("/:orderid", validateStatusInput, authAdmin, updateStatus);
 
-//cancelar pedido
+//eliminar pedido
 //accesible solo admin
 router.delete("/:orderid", authAdmin, deleteOrder);
 module.exports = router;

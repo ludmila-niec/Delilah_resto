@@ -24,12 +24,11 @@ module.exports.validateRegisterInput = function (req, res, next) {
             .json({ success: false, message: "Faltan completar datos" });
     }
 };
-///aca podria hacer uso de alguna libreria para validar los inputs
 
 
 
 //check que haya username y password || email y password para iniciar sesion
-module.exports.validateEmptyInput = function (req, res, next) {
+module.exports.validateLoginInput = function (req, res, next) {
     console.log('middleware');
     req.body
     const { username, email, password } = req.body

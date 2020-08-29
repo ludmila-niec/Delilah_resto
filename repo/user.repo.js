@@ -52,13 +52,12 @@ module.exports = {
                 adress: adress,
                 password: password,
             });
-            if (!newUser) {
-                return false;
-            } else {
-                return newUser;
-            }
+            console.log("nuevo usuario");
+            console.log(newUser);
+            return newUser;
         } catch (error) {
             console.log(error.message);
+            return error;
         }
     },
     validateRealUser: async (data) => {
@@ -84,7 +83,7 @@ module.exports = {
     },
     getUserById: async (id) => {
         try {
-            let user = await User.findByPk(id)
+            let user = await User.findByPk(id);
             if (!user) {
                 throw new Error("No se encontró el usuario");
             }
@@ -93,9 +92,8 @@ module.exports = {
             console.log(error);
         }
     },
-    getUserDetails: async (id) =>{
-        try{
-
+    getUserDetails: async (id) => {
+        try {
             let user = await User.findOne({
                 where: { user_id: id },
                 attributes: [
@@ -108,8 +106,8 @@ module.exports = {
                     "adress",
                 ],
             });
-            return user
-        }catch(error){
+            return user;
+        } catch (error) {
             console.log(error);
         }
     },
@@ -119,7 +117,6 @@ module.exports = {
             return users;
         } catch (error) {
             console.log(error);
-           
         }
     },
 };

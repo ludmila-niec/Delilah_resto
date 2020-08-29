@@ -1,5 +1,4 @@
 const Product = require("../database/models/Product");
-
 module.exports = {
     getProducts: async function () {
         try {
@@ -20,6 +19,7 @@ module.exports = {
             return newProduct;
         } catch (error) {
             console.log(error);
+            return error
         }
     },
     modifyProduct: async (name, price, id) => {
@@ -38,6 +38,7 @@ module.exports = {
             return updatedProduct;
         } catch (error) {
             console.log(error);
+            return error
         }
     },
     deleteProductById: async (id) => {

@@ -14,13 +14,9 @@ const Product = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
-                notEmpty: {
+                isAlpha: {
                     args: true,
-                    msg: "Por favor ingresa un Nombre para tu producto",
-                },
-                notNull: {
-                    args: true,
-                    msg: "Por favor ingresa un Nombre para tu producto",
+                    msg: "Este campo solo acepta letras",
                 },
                 len: {
                     args: [3, 255],
@@ -33,13 +29,9 @@ const Product = sequelize.define(
             type: DataTypes.INTEGER,
             allowNull: false,
             validate: {
-                isNumeric: {
-                    args: true,
-                    msg: "El Precio solo debe contener numeros",
-                },
                 isInt: {
                     args: true,
-                    msg: "El Precio solo debe contener numeros",
+                    msg: "El Precio solo debe contener numeros enteros",
                 },
                 notNull: {
                     args: true,

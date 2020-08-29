@@ -6,7 +6,7 @@ const {
 } = require("../repo/user.repo");
 
 module.exports = {
-    createNewUser: async (req, res) => {
+    createNewUser: async (req, res, next) => {
         const body = req.body;
         try {
             //checkear si el username ya se encuentra registrado
@@ -14,7 +14,8 @@ module.exports = {
             if (usernameExists) {
                 return res.status(400).json({
                     success: false,
-                    message:"El nombre de usuario ingresado ya se encuentra registrado"
+                    message:
+                        "El nombre de usuario ingresado ya se encuentra registrado",
                 });
             }
             //checkear si el email ya se encuentra registrado
@@ -38,13 +39,19 @@ module.exports = {
                         "Error al intentar guardar nuevo usuario en la base de datos",
                 });
             }
+            if (newUser.errors) {
+                return next(newUser.errors);
+            }
             return res.status(200).json({
                 success: true,
                 message: "Usuario registrado exitosamente",
                 data: body,
             });
         } catch (error) {
-          res.status(500).json({success:false, message:"Ocurrio un error en la base de datos"});
+            res.status(500).json({
+                success: false,
+                message: "Ocurrio un error en la base de datos",
+            });
         }
     },
 };
