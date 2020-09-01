@@ -82,14 +82,14 @@ module.exports = {
             let status = req.body.status_id;
             let orderUpdated = await changeStatus(orderId, status);
             if (orderUpdated[0] === 0) {
-                return res.status(400).json({
+                return res.status(404).json({
                     success: false,
-                    message: "No se encontró el numero de orden",
+                    message: "No se encontró el numero de pedido",
                 });
             }
             res.status(200).json({
                 success: true,
-                message: "Estado de la orden actualizada",
+                message: "Estado del pedido modificada",
             });
         } catch (error) {
             res.status(500).send(`Error en el servidor. ${error}`);
@@ -102,12 +102,12 @@ module.exports = {
             if (orderDeleted === 0) {
                 return res.status(400).json({
                     success: false,
-                    message: "No se encontró el id de la orden",
+                    message: "No se encontró el id del pedido",
                 });
             }
             res.status(200).json({
                 success: true,
-                message: `Numero de orden ${orderId} eliminada`,
+                message: `Pedido numero ${orderId} eliminado`,
             });
         } catch (error) {
             res.status(500).send(`Error en el servidor. ${error}`);

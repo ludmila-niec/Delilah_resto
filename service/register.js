@@ -42,7 +42,7 @@ module.exports = {
             if (newUser.errors) {
                 return next(newUser.errors);
             }
-            return res.status(200).json({
+            return res.status(201).json({
                 success: true,
                 message: "Usuario registrado exitosamente",
                 data: body,
