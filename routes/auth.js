@@ -1,6 +1,5 @@
 const router = require("express").Router();
-const {createNewUser} = require("../service/register")
-const {login} = require('../service/login')
+const {createNewUser,login} = require('../service/auth')
 const {validateRegisterInput, validateLoginInput} = require('../middleware/user')
 
 //registrar usuario

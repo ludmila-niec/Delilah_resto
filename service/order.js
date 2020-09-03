@@ -3,8 +3,10 @@ const {
     getUserOrders,
     getOrder,
     checkRealProduct,
+    checkValidPayment,
     saveOrder,
     saveProductOrder,
+    checkValidStatus,
     changeStatus,
     deleteOrderById,
 } = require("../repo/order.repo");
@@ -49,13 +51,23 @@ module.exports = {
         try {
             let userId = req.userId;
             let body = req.body;
-            //checkear que los id de los productos existan antes de guardar la orden
+            //checkear que los id de los productos existan
             let productValidacion = await checkRealProduct(body.detail);
             if (productValidacion.length > 0) {
                 return res.status(404).json({
                     success: false,
                     message: "No se encontró el/los producto/s",
                 });
+            }
+            //check metodo de pago valido
+            let validPayment = await checkValidPayment(body.payment_method);
+            if (!validPayment) {
+                return res
+                    .status(400)
+                    .json({
+                        success: false,
+                        message: "Valor de metodo de pago invalido",
+                    });
             }
             //guardar user order
             let orderCreated = await saveOrder(body, userId);
@@ -80,16 +92,23 @@ module.exports = {
         try {
             let orderId = req.params.orderid;
             let status = req.body.status_id;
+            let validStatus = await checkValidStatus(status);
+            if (!validStatus) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Valor de estado invalido",
+                });
+            }
             let orderUpdated = await changeStatus(orderId, status);
             if (orderUpdated[0] === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "No se encontró el numero de pedido",
+                    message: "No se encontró el pedido",
                 });
             }
             res.status(200).json({
                 success: true,
-                message: "Estado del pedido modificada",
+                message: `Estado del pedido modificado a ${validStatus.dataValues.name}`,
             });
         } catch (error) {
             res.status(500).send(`Error en el servidor. ${error}`);
@@ -102,7 +121,7 @@ module.exports = {
             if (orderDeleted === 0) {
                 return res.status(400).json({
                     success: false,
-                    message: "No se encontró el id del pedido",
+                    message: "No se encontró el pedido",
                 });
             }
             res.status(200).json({

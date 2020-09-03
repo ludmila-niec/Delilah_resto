@@ -14,11 +14,11 @@ router.get("/", authUser, showProducts);
 
 //crear producto
 //accesible solo admin
-router.post("/", validateProductInput, authAdmin, createNewProduct);
+router.post("/", authAdmin, validateProductInput, createNewProduct);
 
 //modificar producto
 //accesible solo admin
-router.patch("/:idproduct", validateProductInput, authAdmin, updateProduct);
+router.patch("/:idproduct", authAdmin, validateProductInput, updateProduct);
 
 //eliminar producto
 //accesible solo admin

@@ -1,4 +1,4 @@
-const { getUserById, getAllUsers,getUserDetails } = require("../repo/user.repo");
+const { getUserById, getAllUsers} = require("../repo/user.repo");
 
 module.exports = {
     getUserData: async (req, res) => {
@@ -7,8 +7,8 @@ module.exports = {
             let userData = await getUserById(userId);
             
             if (!userData.isAdmin) {
-                let userDetails = await getUserDetails(userId)
-                return res.status(200).json({ success: true, data: userDetails });
+                // let userDetails = await getUserDetails(userId)
+                return res.status(200).json({ success: true, data: userData });
             }
             //si es admin, retorna todos los usuarios
             if (userData.isAdmin) {

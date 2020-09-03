@@ -17,7 +17,7 @@ const User = sequelize.define(
             validate: {
                 notEmpty: {
                     args: true,
-                    msg: "El  nombre de usuario no puede estar vacia",
+                    msg: "El nombre de usuario no puede estar vacio",
                 },
             },
         },
@@ -35,9 +35,9 @@ const User = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
-                isAlpha: {
-                    args: true,
-                    msg: "El Nombre solo puede contener letras",
+                is: {
+                    args: /^[a-z _]+$/i,
+                    msg: "El nombre solo puede contener letras",
                 },
             },
         },
@@ -45,9 +45,9 @@ const User = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
-                isAlpha: {
-                    args: true,
-                    msg: "El Apellido solo puede contener letras",
+                is: {
+                    args: /^[a-z _]+$/i,
+                    msg: "El apellido solo puede contener letras",
                 },
             },
         },
@@ -58,7 +58,7 @@ const User = sequelize.define(
             validate: {
                 isEmail: {
                     args: true,
-                    msg: "Por favor ingresa un email válido",
+                    msg: "Ingresa un email válido",
                 },
             },
         },

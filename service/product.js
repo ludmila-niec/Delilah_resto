@@ -5,6 +5,8 @@ const {
     deleteProductById,
 } = require("../repo/product.repo");
 
+const {ValidationError} = require('sequelize')
+
 module.exports = {
     showProducts: async (req, res) => {
         try {
@@ -18,8 +20,8 @@ module.exports = {
         try {
             let body = req.body;
             let newProduct = await createProduct(body.name, body.price);
-            if (newProduct.errors) {
-                return next(newProduct.errors);
+            if (newProduct instanceof ValidationError) {
+                return next(newProduct);
             }
             res.status(201).json({
                 success: true,
@@ -27,7 +29,7 @@ module.exports = {
                 data: newProduct,
             });
         } catch (error) {
-            console.log("entre en service error");
+
             res.status(500).send("Error en servidor");
         }
     },
@@ -44,11 +46,11 @@ module.exports = {
             if (productModified[0] === 0) {
                 return res.status(404).json({
                     success: false,
-                    message: "No se encontró el producto por id",
+                    message: "No se encontró el producto",
                 });
             }
-            if (productModified.errors) {
-                return next(productModified.errors);
+            if (productModified instanceof ValidationError) {
+                return next(productModified);
             }
             res.status(200).json({
                 success: true,
@@ -64,9 +66,9 @@ module.exports = {
         try {
             let product = await deleteProductById(productId);
             if (product != 1) {
-                return res.status(401).json({
+                return res.status(404).json({
                     success: false,
-                    message: "No se encontró el producto por id",
+                    message: "No se encontró el producto",
                 });
             }
 

@@ -22,11 +22,11 @@ router.get("/:orderid", authUser, getOneOrder);
 
 //crear pedido
 //accesible user y admin
-router.post("/", validateOrderInput, authUser, createOrder);
+router.post("/", authUser, validateOrderInput, createOrder);
 
 //modificar estado del pedido
 //accesible solo admin
-router.patch("/:orderid", validateStatusInput, authAdmin, updateStatus);
+router.patch("/:orderid", authAdmin, validateStatusInput, updateStatus);
 
 //eliminar pedido
 //accesible solo admin

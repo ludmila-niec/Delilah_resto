@@ -7,8 +7,7 @@ const OrderStatus = require("./database/models/OrderStatus");
 const Payment = require("./database/models/Payments");
 require("./database/models/associations");
 const {
-    logErrors,
-    validatorError,
+    validationError,
 } = require("./middleware/errorHandler");
 dotenv.config();
 
@@ -19,15 +18,14 @@ app.use(express.json());
 const userRoute = require("./routes/user");
 const productRoute = require("./routes/product");
 const orderRoutes = require("./routes/order");
-const registerAndLogRoutes = require("./routes/register_log");
-app.use("/", registerAndLogRoutes);
+const authRoutes = require("./routes/auth");
+app.use("/auth/", authRoutes);
 app.use("/api/users", userRoute);
 app.use("/api/products", productRoute);
 app.use("/api/orders", orderRoutes);
 
 //error handlers
-// app.use(logErrors);
-app.use(validatorError);
+app.use(validationError);
 
 const PORT = process.env.PORT || 3000;
 

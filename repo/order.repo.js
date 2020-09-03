@@ -5,7 +5,6 @@ const { Op } = require("sequelize");
 const Payment = require("../database/models/Payments");
 const User = require("../database/models/User");
 const OrderStatus = require("../database/models/OrderStatus");
-
 module.exports = {
     getAllOrders: async () => {
         try {
@@ -19,7 +18,7 @@ module.exports = {
                     {
                         model: Product,
                         as: "products",
-                        attributes: ["name"],
+                        attributes: ["name", "product_id"],
                         required: false,
                         through: {
                             model: ProductOrder,
@@ -31,6 +30,7 @@ module.exports = {
                     {
                         model: User,
                         attributes: [
+                            "user_id",
                             "adress",
                             "firstName",
                             "lastName",
@@ -68,9 +68,9 @@ module.exports = {
                         },
                     },
                     { model: Payment, attributes: ["name"] },
+                    { model: User, attributes: ["adress"] },
                 ],
             });
-
             return userOrders;
         } catch (error) {
             console.log(error);
@@ -84,7 +84,6 @@ module.exports = {
                 where: {
                     [Op.and]: [{ order_id: orderId }, { user_id: userId }],
                 },
-
                 include: [
                     {
                         model: OrderStatus,
@@ -105,15 +104,18 @@ module.exports = {
                     { model: User, attributes: ["adress"] },
                 ],
             });
-            console.log("orden final");
-            console.log(order);
             if (order.length === 0) {
                 return null;
             }
-            let orderAmount = await ProductOrder.sum("product_price", {
+            //calcular total de la orden
+            let orderById = await ProductOrder.findAll({
                 where: { order_id: orderId },
             });
-            return { order, orderAmount };
+            let totalAmount = null;
+            for (const order of orderById) {
+                totalAmount += order.product_price * order.product_quantity;
+            }
+            return { order, totalAmount };
         } catch (error) {
             console.log(error);
         }
@@ -131,6 +133,10 @@ module.exports = {
         } catch (err) {
             console.log(err);
         }
+    },
+    checkValidPayment: async (paymentId) => {
+        let payment = await Payment.findByPk(paymentId);
+        return payment;
     },
     saveOrder: async (order, userId) => {
         try {
@@ -155,6 +161,14 @@ module.exports = {
                 });
             }
             return true;
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    checkValidStatus: async (statusId) => {
+        try {
+            let status = await OrderStatus.findByPk(statusId);
+            return status;
         } catch (error) {
             console.log(error);
         }

@@ -1,4 +1,5 @@
 const User = require("../database/models/User");
+const { ValidationError } = require("sequelize");
 
 module.exports = {
     //checkea si el username ya esta registrado
@@ -52,12 +53,13 @@ module.exports = {
                 adress: adress,
                 password: password,
             });
-            console.log("nuevo usuario");
-            console.log(newUser);
             return newUser;
         } catch (error) {
-            console.log(error.message);
-            return error;
+             if (error instanceof ValidationError) {
+                 return error;
+             }
+            console.log(error);
+           
         }
     },
     validateRealUser: async (data) => {
@@ -84,28 +86,6 @@ module.exports = {
     getUserById: async (id) => {
         try {
             let user = await User.findByPk(id);
-            if (!user) {
-                throw new Error("No se encontró el usuario");
-            }
-            return user;
-        } catch (error) {
-            console.log(error);
-        }
-    },
-    getUserDetails: async (id) => {
-        try {
-            let user = await User.findOne({
-                where: { user_id: id },
-                attributes: [
-                    "username",
-                    "password",
-                    "firstName",
-                    "lastName",
-                    "email",
-                    "phone",
-                    "adress",
-                ],
-            });
             return user;
         } catch (error) {
             console.log(error);
