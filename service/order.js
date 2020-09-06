@@ -66,7 +66,7 @@ module.exports = {
                     .status(400)
                     .json({
                         success: false,
-                        message: "Valor de metodo de pago invalido",
+                        message: "Error: Valor de metodo de pago invalido",
                     });
             }
             //guardar user order

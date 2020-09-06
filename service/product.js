@@ -74,7 +74,7 @@ module.exports = {
 
             return res.status(200).json({
                 success: true,
-                message: "Producto eliminado exitosamente",
+                message: `Producto con id ${productId} eliminado exitosamente`,
             });
         } catch (error) {
             res.status(500).send("Error en servidor");

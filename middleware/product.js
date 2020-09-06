@@ -5,9 +5,7 @@ module.exports = {
         if (name && price) {
             return next();
         } else {
-            return res
-                .status(400)
-                .json({ success: false, message: "Faltan completar datos" });
+            return res.status(400).send("Error: Datos incompletos");
         }
     },
 };

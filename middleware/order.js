@@ -4,9 +4,7 @@ module.exports = {
         if (detail && payment_method) {
             return next();
         } else {
-            return res
-                .status(400)
-                .json({ success: false, message: "Faltan completar datos" });
+            return res.status(400).send("Error: Datos incompletos");
         }
     },
     validateStatusInput: (req, res, next) => {
@@ -14,9 +12,7 @@ module.exports = {
         if (status) {
             return next();
         } else {
-            return res
-                .status(400)
-                .json({ success: false, message: "Faltan completar datos" });
+            return res.status(400).send("Error: Datos incompletos");
         }
     },
 };
