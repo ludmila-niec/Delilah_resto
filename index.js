@@ -2,12 +2,12 @@ const express = require("express");
 const app = express();
 const sequelize = require("./database/db");
 const dotenv = require("dotenv");
+dotenv.config();
 
 require("./database/models/associations");
 const {
     validationError,
 } = require("./middleware/errorHandler");
-dotenv.config();
 
 //body parser
 app.use(express.json());
@@ -29,16 +29,12 @@ app.use(validationError);
 
 const PORT = process.env.PORT || 3000;
 
-//ubicar en file aparte para insertar registros + authAdmin
-
-
 //inicia servidor
 app.listen(PORT, async () => {
     console.log("Servidor iniciado en el puerto " + PORT);
 
     //conexion a la base de datos
     try {
-        // await sequelize.authenticate();
         await sequelize.sync();
         console.log("Conectado a la base de datos Delilah");
     } catch (error) {

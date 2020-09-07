@@ -1,5 +1,0 @@
-CREATE TABLE payments (
-    payment_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    amount INT NOT NULL,
-    method VARCHAR(100) NOT NULL
-)

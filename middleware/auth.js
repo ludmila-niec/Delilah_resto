@@ -1,4 +1,3 @@
-// const { jwt, JsonWebTokenError } = require("jsonwebtoken");
 const jwt   = require("jsonwebtoken");
 const { getUserById } = require("../repositories/user.repo");
 
