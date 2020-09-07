@@ -81,7 +81,7 @@ module.exports = {
             });
             return userExists;
         }
-        return realUser;
+        return null;
     },
     getUserById: async (id) => {
         try {
@@ -99,4 +99,36 @@ module.exports = {
             console.log(error);
         }
     },
+    updateUserById: async (userId, body) =>{
+        try{
+            let userUpdated = await User.update(
+                {
+                    firstName: body.firstName,
+                    lastName: body.lastName,
+                    password: body.password,
+                    phone: body.phone,
+                    adress: body.adress,
+                },
+                { where: { user_id: userId } }
+            );
+            return userUpdated
+        }catch(error){
+            if (error instanceof ValidationError) {
+                return error;
+            }
+            console.log(error);
+        }
+    },
+    deleteUserById: async (userId) =>{
+        try{
+
+            let deletedUser = await User.destroy({
+                where:{user_id:userId}
+            })
+            return deletedUser
+        }catch(error){
+            console.log(error);
+        }
+    }
+
 };

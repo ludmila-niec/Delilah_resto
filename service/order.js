@@ -2,6 +2,7 @@ const {
     getAllOrders,
     getUserOrders,
     getOrder,
+    getOrderById,
     checkRealProduct,
     checkValidPayment,
     saveOrder,
@@ -9,8 +10,8 @@ const {
     checkValidStatus,
     changeStatus,
     deleteOrderById,
-} = require("../repo/order.repo");
-const { getUserById } = require("../repo/user.repo");
+} = require("../repositories/order.repo");
+const { getUserById } = require("../repositories/user.repo");
 
 module.exports = {
     getOrders: async (req, res) => {
@@ -35,7 +36,21 @@ module.exports = {
         try {
             let orderId = req.params.orderid;
             let userId = req.userId;
-            let orderById = await getOrder(orderId, userId);
+            //buscar usuario para saber si es tiene rol normal o admin
+            let user = await getUserById(userId);
+            //si es tiene rol normal, retornar el pedido sí le corresponde
+            if (!user.dataValues.isAdmin) {
+                let orderById = await getOrder(orderId, userId);
+                if (!orderById) {
+                    return res.status(404).json({
+                        success: false,
+                        message: "No se encontró el pedido",
+                    });
+                }
+                return res.status(200).json({ success: true, data: orderById });
+            }
+            //si es admin, puede consultar cualquier pedido
+            let orderById = await getOrderById(orderId);
             if (!orderById) {
                 return res.status(404).json({
                     success: false,
@@ -62,12 +77,10 @@ module.exports = {
             //check metodo de pago valido
             let validPayment = await checkValidPayment(body.payment_method);
             if (!validPayment) {
-                return res
-                    .status(400)
-                    .json({
-                        success: false,
-                        message: "Error: Valor de metodo de pago invalido",
-                    });
+                return res.status(400).json({
+                    success: false,
+                    message: "Error: Valor de metodo de pago invalido",
+                });
             }
             //guardar user order
             let orderCreated = await saveOrder(body, userId);
@@ -119,7 +132,7 @@ module.exports = {
             let orderId = req.params.orderid;
             let orderDeleted = await deleteOrderById(orderId);
             if (orderDeleted === 0) {
-                return res.status(400).json({
+                return res.status(404).json({
                     success: false,
                     message: "No se encontró el pedido",
                 });

@@ -1,13 +1,14 @@
-const { getUserById, getAllUsers} = require("../repo/user.repo");
+const bcrypt = require("bcryptjs");
+const { getUserById, getAllUsers, updateUserById, deleteUserById} = require("../repositories/user.repo");
+const { ValidationError } = require("sequelize");
 
 module.exports = {
     getUserData: async (req, res) => {
         try {
-            let userId = req.userId;
+            const userId = req.userId;
             let userData = await getUserById(userId);
             
             if (!userData.isAdmin) {
-                // let userDetails = await getUserDetails(userId)
                 return res.status(200).json({ success: true, data: userData });
             }
             //si es admin, retorna todos los usuarios
@@ -22,7 +23,7 @@ module.exports = {
     getOneUser: async (req, res) => {
         try{
 
-            let userId = req.params.userId;
+            const userId = req.params.userId;
             let userData = await getUserById(userId);
             if (!userData) {
                 return res
@@ -34,4 +35,46 @@ module.exports = {
             console.log(error);
         }
     },
+    updateUser: async (req, res, next) =>{
+        try{
+            let body = req.body
+            const userid = req.userId
+            //hash password
+            const salt = await bcrypt.genSalt(10);
+            body.password = await bcrypt.hash(body.password, salt);
+            //guardar datos actualizados
+            let updatedUser = await updateUserById(userid, body)
+            //check si hay error en validacion
+             if (updatedUser instanceof ValidationError) {
+                 return next(updatedUser);
+             }
+             res.status(200).json({
+                 success: true,
+                 message: "Usuario modificado exitosamente!",
+             });
+        }catch(error){
+            console.log(error);
+            res.status(500).send("Error en servidor");
+        }
+    },
+    deleteUser: async (req, res) => {
+        const userId = req.params.userId
+        try{
+            let user = await deleteUserById(userId)
+            if (user != 1) {
+                return res.status(404).json({
+                    success: false,
+                    message: "No se encontró el usuario",
+                });
+            }
+            return res.status(200).json({
+                success: true,
+                message: 'Usuario eliminado exitosamente'
+            });
+        }catch(error){
+            console.log(error);
+        }
+    },
+    
+
 };

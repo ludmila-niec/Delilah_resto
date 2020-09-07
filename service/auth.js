@@ -5,7 +5,7 @@ const {
     validateUserName,
     validateEmail,
     create, validateRealUser
-} = require("../repo/user.repo");
+} = require("../repositories/user.repo");
 
 
 module.exports = {

@@ -36,3 +36,11 @@ module.exports.validateLoginInput = function (req, res, next) {
     }
     return res.status(400).send("Error: Datos incompletos");
 };
+
+module.exports.validateUpdateInput = function (req, res, next){
+    const {firstName,lastName,phone,adress, password} = req.body
+    if(firstName && lastName && phone && adress && password){
+        return next()
+    }
+     return res.status(400).send("Error: Datos incompletos");
+}

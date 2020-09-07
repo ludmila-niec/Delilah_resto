@@ -3,7 +3,7 @@ const {
     createProduct,
     modifyProduct,
     deleteProductById,
-} = require("../repo/product.repo");
+} = require("../repositories/product.repo");
 
 const {ValidationError} = require('sequelize')
 
@@ -54,7 +54,7 @@ module.exports = {
             }
             res.status(200).json({
                 success: true,
-                message: "Producto actualizado exitosamente!",
+                message: "Producto modificado exitosamente!",
                 data: product,
             });
         } catch (error) {

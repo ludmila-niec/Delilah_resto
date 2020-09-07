@@ -1,22 +1,19 @@
 // const { jwt, JsonWebTokenError } = require("jsonwebtoken");
 const jwt   = require("jsonwebtoken");
-const { getUserById } = require("../repo/user.repo");
+const { getUserById } = require("../repositories/user.repo");
 
 module.exports = {
     authUser: async (req, res, next) => {
         try {
             const token = req.header("Authorization").split(" ")[1];
             let user = await jwt.verify(token, process.env.TOKEN_SECRET);
-            console.log(user);
             req.userId = user.id;
             return next();
         } catch (error) {
-            if (jwt.JsonWebTokenError) {
+            if (jwt.TokenExpiredError) {
                 return res
                     .status(401)
-                    .send(
-                        "Error: Token vencido. Tenes que iniciar sesión nuevamente"
-                    );
+                    .send("Error: Token invalido/vencido. Tenes que iniciar sesión");
             }
             return res
                 .status(401)
@@ -28,7 +25,7 @@ module.exports = {
             const token = req.header("Authorization").split(" ")[1];
             let user = await jwt.verify(token, process.env.TOKEN_SECRET);
             req.userId = user.id;
-            //buscar usuario por id
+            //buscar usuario por id para checkear el rol
             let findUser = await getUserById(user.id);
             if (!findUser) {
                 return res.status(404).send("No se encontró el id del usuario");
@@ -43,11 +40,11 @@ module.exports = {
                     );
             }
         } catch (error) {
-            if (jwt.JsonWebTokenError) {
+            if (jwt.TokenExpiredError) {
                 return res
                     .status(401)
                     .send(
-                        "Error: Token vencido. Tenes que iniciar sesión nuevamente"
+                        "Error: Token invalido/vencido. Tenes que iniciar sesión"
                     );
             }
             return res

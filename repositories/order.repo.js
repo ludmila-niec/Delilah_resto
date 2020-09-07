@@ -120,6 +120,47 @@ module.exports = {
             console.log(error);
         }
     },
+    getOrderById: async (orderId) =>{
+        try {
+            let order = await UserOrder.findOne({
+                attributes: ["order_id"],
+                where: { order_id: orderId },
+                include: [
+                    {
+                        model: OrderStatus,
+                        attributes: ["name"],
+                    },
+                    {
+                        model: Product,
+                        as: "products",
+                        attributes: ["name"],
+                        required: false,
+                        through: {
+                            model: ProductOrder,
+                            as: "ProductOrders",
+                            attributes: ["product_price", "product_quantity"],
+                        },
+                    },
+                    { model: Payment, attributes: ["name"] },
+                    { model: User, attributes: ["adress"] },
+                ],
+            });
+            if (order.length === 0) {
+                return null;
+            }
+            //calcular total de la orden
+            let orderById = await ProductOrder.findAll({
+                where: { order_id: orderId },
+            });
+            let totalAmount = null;
+            for (const order of orderById) {
+                totalAmount += order.product_price * order.product_quantity;
+            }
+            return { order, totalAmount };
+        } catch (error) {
+            console.log(error);
+        }
+    },
     checkRealProduct: async (products) => {
         try {
             let errors = [];
