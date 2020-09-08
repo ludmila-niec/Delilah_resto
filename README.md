@@ -12,7 +12,7 @@ Vas a necesitar instalar Node.Js para trabajar con este repositorio
 
 ```bash
 
-$git clone https://github.com/ludmila-niec/Delilah_resto.git
+git clone https://github.com/ludmila-niec/Delilah_resto.git
 
 ```
 
