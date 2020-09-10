@@ -91,7 +91,7 @@ WHERE  user_id  = 1
 
 :eight: **Insertar datos de productos, metodos de pago y estados del pedido en la base de datos**
 
-_Iniciar sesión con el usuario Admin en el siguiente endpoint:_
+_Primero necesita iniciar sesión con el usuario Admin para obtener el token:_
 
 `POST "http://localhost:3000/auth/login`
 
@@ -104,7 +104,7 @@ _Iniciar sesión con el usuario Admin en el siguiente endpoint:_
 }
 ```
 
-_Con el token obtenido en la respuesta ya tenes autorización para hacer un GET al siguiente endpoint:_
+_Con el token obtenido en la respuesta, ya ténes autorización para hacer un GET al endpoint debajo y de éste modo se van a insertar los datos de productos, metodos de pago y estados del pedido en la base de datos:_
 
 `GET "http://localhost:3000"`
 
