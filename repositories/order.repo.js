@@ -92,7 +92,7 @@ module.exports = {
                     {
                         model: Product,
                         as: "products",
-                        attributes: ["name"],
+                        attributes: ["name", "img"],
                         required: false,
                         through: {
                             model: ProductOrder,
@@ -101,7 +101,15 @@ module.exports = {
                         },
                     },
                     { model: Payment, attributes: ["name"] },
-                    { model: User, attributes: ["adress"] },
+                    {
+                        model: User,
+                        attributes: [
+                            "firstName",
+                            "lastName",
+                            "phone",
+                            "adress",
+                        ],
+                    },
                 ],
             });
             if (order.length === 0) {
@@ -120,7 +128,7 @@ module.exports = {
             console.log(error);
         }
     },
-    getOrderById: async (orderId) =>{
+    getOrderById: async (orderId) => {
         try {
             let order = await UserOrder.findOne({
                 attributes: ["order_id"],
