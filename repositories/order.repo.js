@@ -9,7 +9,7 @@ module.exports = {
     getAllOrders: async () => {
         try {
             let orders = await UserOrder.findAll({
-                attributes: ["order_id"],
+                attributes: ["order_id", "createdAt", "updateAt"],
                 include: [
                     {
                         model: OrderStatus,
@@ -18,7 +18,13 @@ module.exports = {
                     {
                         model: Product,
                         as: "products",
-                        attributes: ["name", "product_id"],
+                        attributes: [
+                            "name",
+                            "img",
+                            "description",
+                            "category_id",
+                            "product_id",
+                        ],
                         required: false,
                         through: {
                             model: ProductOrder,
@@ -49,7 +55,7 @@ module.exports = {
     getUserOrders: async (userId) => {
         try {
             let userOrders = await UserOrder.findAll({
-                attributes: ["order_id"],
+                attributes: ["order_id", "createdAt", "updatedAt"],
                 where: { user_id: userId },
                 include: [
                     {
@@ -59,7 +65,13 @@ module.exports = {
                     {
                         model: Product,
                         as: "products",
-                        attributes: ["name"],
+                        attributes: [
+                            "name",
+                            "img",
+                            "description",
+                            "category_id",
+                            "product_id",
+                        ],
                         required: false,
                         through: {
                             model: ProductOrder,
@@ -80,7 +92,7 @@ module.exports = {
         //Usuario solo puede consultar un numero de pedido que le pertenezca
         try {
             let order = await UserOrder.findAll({
-                attributes: [],
+                attributes: ["order_id", "createdAt", "updateAt"],
                 where: {
                     [Op.and]: [{ order_id: orderId }, { user_id: userId }],
                 },
@@ -92,7 +104,13 @@ module.exports = {
                     {
                         model: Product,
                         as: "products",
-                        attributes: ["name", "img"],
+                        attributes: [
+                            "name",
+                            "img",
+                            "description",
+                            "category_id",
+                            "product_id",
+                        ],
                         required: false,
                         through: {
                             model: ProductOrder,
@@ -104,10 +122,13 @@ module.exports = {
                     {
                         model: User,
                         attributes: [
+                            "user_id",
+                            "adress",
                             "firstName",
                             "lastName",
+                            "username",
+                            "email",
                             "phone",
-                            "adress",
                         ],
                     },
                 ],
@@ -131,7 +152,7 @@ module.exports = {
     getOrderById: async (orderId) => {
         try {
             let order = await UserOrder.findOne({
-                attributes: ["order_id"],
+                attributes: ["order_id", "createdAt", "updateAt"],
                 where: { order_id: orderId },
                 include: [
                     {
@@ -141,7 +162,13 @@ module.exports = {
                     {
                         model: Product,
                         as: "products",
-                        attributes: ["name"],
+                        attributes: [
+                            "name",
+                            "img",
+                            "description",
+                            "category_id",
+                            "product_id",
+                        ],
                         required: false,
                         through: {
                             model: ProductOrder,
@@ -150,7 +177,18 @@ module.exports = {
                         },
                     },
                     { model: Payment, attributes: ["name"] },
-                    { model: User, attributes: ["adress"] },
+                    {
+                        model: User,
+                        attributes: [
+                            "user_id",
+                            "adress",
+                            "firstName",
+                            "lastName",
+                            "username",
+                            "email",
+                            "phone",
+                        ],
+                    },
                 ],
             });
             if (order.length === 0) {

@@ -1,6 +1,9 @@
 const {
     getProducts,
+    getProductById,
+    getProductsByCategory,
     createProduct,
+    createCategory,
     modifyProduct,
     deleteProductById,
 } = require("../repositories/product.repo");
@@ -16,10 +19,48 @@ module.exports = {
             res.status(500).send("Error en servidor");
         }
     },
+    showProductById: async (req, res) => {
+        try {
+            const productId = req.params.productId;
+            const productById = await getProductById(productId);
+            if (!productById) {
+                return res.status(404).json({
+                    success: false,
+                    message: "No se encontró el producto por id",
+                });
+            }
+            return res.status(200).json({
+                success: true,
+                data: productById,
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(500).send("Error en servidor");
+        }
+    },
+    showProductsByCategory: async (req, res) => {
+        try {
+            let categoryId = req.params.categoryId;
+            let products = await getProductsByCategory(categoryId);
+            if (!products) {
+                return res.status(404).json({
+                    success: false,
+                    message: "No se encontraron productas para la categoria",
+                });
+            }
+            return res.status(200).json({
+                success: true,
+                data: products,
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(500).send("Error en servidor");
+        }
+    },
     createNewProduct: async (req, res, next) => {
         try {
-            let body = req.body;
-            let newProduct = await createProduct(body);
+            let productData = req.body;
+            let newProduct = await createProduct(productData);
             if (newProduct instanceof ValidationError) {
                 return next(newProduct);
             }
@@ -29,12 +70,30 @@ module.exports = {
                 data: newProduct,
             });
         } catch (error) {
+            console.log(error);
             res.status(500).send("Error en servidor");
+        }
+    },
+    createNewCategory: async (req, res, next) => {
+        try {
+            const categoryData = req.body;
+            const newCategory = await createCategory(categoryData);
+            if (newCategory instanceof ValidationError) {
+                return next(newCategory);
+            }
+            res.status(201).json({
+                success: true,
+                message: "Categoria creada exitosamente",
+                data: newCategory,
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(500).send("Error en el servidor.");
         }
     },
     updateProduct: async (req, res, next) => {
         const product = req.body;
-        const productId = req.params.idproduct;
+        const productId = req.params.productId;
         try {
             let productModified = await modifyProduct(product, productId);
             console.log(productModified);
@@ -57,7 +116,7 @@ module.exports = {
         }
     },
     deleteProduct: async (req, res) => {
-        const productId = req.params.idproduct;
+        const productId = req.params.productId;
         try {
             let product = await deleteProductById(productId);
             if (product != 1) {
