@@ -42,7 +42,7 @@ module.exports = {
         try {
             let categoryId = req.params.categoryId;
             let products = await getProductsByCategory(categoryId);
-            if (!products) {
+            if (products.length === 0) {
                 return res.status(404).json({
                     success: false,
                     message: "No se encontraron productas para la categoria",

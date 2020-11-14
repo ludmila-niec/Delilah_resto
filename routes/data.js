@@ -132,7 +132,7 @@ router.get("/", authAdmin, async (req, res) => {
             },
             {
                 product_id: 11,
-                name: "Ensala Panko Chicken",
+                name: "Ensalada Panko Chicken",
                 description:
                     "Ensalada con mezclum de verdes, supremas de pollo rebozadas en panko, tomates asados, vegetales al horno de barro, cebolla crocante y vinagreta cítrica.",
                 img: "https://i.ibb.co/C9LkY2y/ensalada-panko.png",
