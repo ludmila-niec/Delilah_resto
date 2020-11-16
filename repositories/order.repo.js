@@ -9,7 +9,7 @@ module.exports = {
     getAllOrders: async () => {
         try {
             let orders = await UserOrder.findAll({
-                attributes: ["order_id", "createdAt", "updateAt"],
+                attributes: ["order_id", "createdAt", "updatedAt"],
                 include: [
                     {
                         model: OrderStatus,
@@ -19,11 +19,11 @@ module.exports = {
                         model: Product,
                         as: "products",
                         attributes: [
+                            "product_id",
                             "name",
                             "img",
                             "description",
                             "category_id",
-                            "product_id",
                         ],
                         required: false,
                         through: {
@@ -55,7 +55,6 @@ module.exports = {
     getUserOrders: async (userId) => {
         try {
             let userOrders = await UserOrder.findAll({
-                attributes: ["order_id", "createdAt", "updatedAt"],
                 where: { user_id: userId },
                 include: [
                     {
@@ -66,11 +65,11 @@ module.exports = {
                         model: Product,
                         as: "products",
                         attributes: [
+                            "product_id",
                             "name",
                             "img",
                             "description",
                             "category_id",
-                            "product_id",
                         ],
                         required: false,
                         through: {
@@ -92,7 +91,6 @@ module.exports = {
         //Usuario solo puede consultar un numero de pedido que le pertenezca
         try {
             let order = await UserOrder.findAll({
-                attributes: ["order_id", "createdAt", "updateAt"],
                 where: {
                     [Op.and]: [{ order_id: orderId }, { user_id: userId }],
                 },
@@ -105,11 +103,11 @@ module.exports = {
                         model: Product,
                         as: "products",
                         attributes: [
+                            "product_id",
                             "name",
                             "img",
                             "description",
                             "category_id",
-                            "product_id",
                         ],
                         required: false,
                         through: {
@@ -152,7 +150,6 @@ module.exports = {
     getOrderById: async (orderId) => {
         try {
             let order = await UserOrder.findOne({
-                attributes: ["order_id", "createdAt", "updateAt"],
                 where: { order_id: orderId },
                 include: [
                     {
@@ -163,11 +160,11 @@ module.exports = {
                         model: Product,
                         as: "products",
                         attributes: [
+                            "product_id",
                             "name",
                             "img",
                             "description",
                             "category_id",
-                            "product_id",
                         ],
                         required: false,
                         through: {

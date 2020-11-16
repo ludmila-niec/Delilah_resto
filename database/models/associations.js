@@ -3,6 +3,7 @@ const Product = require("./Product");
 const ProductCategory = require("./ProductCategory");
 const UserOrder = require("./UserOrder");
 const ProductOrder = require("./ProductOrder");
+const Favourite = require("./Favourites");
 const Payment = require("./Payments");
 const OrderStatus = require("./OrderStatus");
 const { DataTypes } = require("sequelize");
@@ -65,4 +66,18 @@ Product.belongsToMany(UserOrder, {
     through: ProductOrder,
     foreignKey: "product_id",
     otherKey: "order_id",
+});
+
+User.belongsToMany(Product, {
+    as: "products",
+    through: Favourite,
+    foreignKey: "user_id",
+    otherKey: "product_id",
+});
+
+Product.belongsToMany(User, {
+    as: "users",
+    through: Favourite,
+    foreignKey: "product_id",
+    otherKey: "user_id",
 });

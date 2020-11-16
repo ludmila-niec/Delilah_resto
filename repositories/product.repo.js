@@ -4,9 +4,7 @@ const { ValidationError } = require("sequelize");
 module.exports = {
     getProducts: async function () {
         try {
-            let products = await Product.findAll({
-                attributes: ["product_id", "name", "price"],
-            });
+            let products = await Product.findAll();
             return products;
         } catch (error) {
             console.log(error);
@@ -71,7 +69,7 @@ module.exports = {
                     img: product.img,
                     description: product.description,
                     category_id: product.category,
-                    price: product.name,
+                    price: product.price,
                 },
                 {
                     where: {
