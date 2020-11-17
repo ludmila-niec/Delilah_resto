@@ -14,14 +14,38 @@ const Product = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
-                is:{
+                is: {
                     args: /^[a-z _]+$/i,
-                    msg:  "El nombre del producto solo puede contener letras",
-                }, 
+                    msg: "El nombre del producto solo puede contener letras",
+                },
                 len: {
                     args: [3, 255],
                     msg:
                         "El nombre del producto debe contener al menos 3 letras",
+                },
+            },
+        },
+        img: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notNull: {
+                    args: true,
+                    msg: "Por favor ingresa la url de la imagen del producto",
+                },
+            },
+        },
+        description: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                len: {
+                    args: [3, 255],
+                    msg: "Agrega una descripción a tu producto",
+                },
+                notNull: {
+                    args: true,
+                    msg: "Agrega una descripción a tu producto",
                 },
             },
         },
@@ -31,7 +55,8 @@ const Product = sequelize.define(
             validate: {
                 isInt: {
                     args: true,
-                    msg: "El Precio del producto solo debe contener numeros enteros",
+                    msg:
+                        "El Precio del producto solo debe contener numeros enteros",
                 },
                 notNull: {
                     args: true,

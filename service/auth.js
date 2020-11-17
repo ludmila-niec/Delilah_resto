@@ -4,9 +4,9 @@ const { ValidationError } = require("sequelize");
 const {
     validateUserName,
     validateEmail,
-    create, validateRealUser
+    create,
+    validateRealUser,
 } = require("../repositories/user.repo");
-
 
 module.exports = {
     createNewUser: async (req, res, next) => {
@@ -44,9 +44,10 @@ module.exports = {
                 data: body,
             });
         } catch (error) {
+            console.log(error);
             res.status(500).json({
                 success: false,
-                message: "Ocurrio un error en el servidor",
+                message: `Ocurrio un error en el servidor. ${error}`,
             });
         }
     },
@@ -86,6 +87,10 @@ module.exports = {
                 .json({ success: true, message: "Login exitoso", token });
         } catch (error) {
             console.log(error);
+            res.status(500).json({
+                success: false,
+                message: `Ocurrio un error en el servidor. ${error}`,
+            });
         }
     },
 };

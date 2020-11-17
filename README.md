@@ -26,7 +26,6 @@ CREATE  DATABASE  delilahresto
 
 :three: **Abrir el proyecto descargado/clonado en el editor de código**
 
-
 :four: **Instalar las dependencias**
 
 ```bash
@@ -34,16 +33,19 @@ CREATE  DATABASE  delilahresto
 npm install
 
 ```
+
 :five: **Crear un archivo `.env` en el directorio principal**
+
 ```
 Incluir las siguientes variables:
 PORT=3000
 TOKEN_SECRET = kdjfsj84kasjfn98JKHBIHS98SJKASNA9E2klldjoewru-043249
 DB_USERNAME = root
-DB_PASSWORD =  
+DB_PASSWORD =
 DB_NAME = delilahresto
 DB_HOST = localhost
 ```
+
 :six: **Iniciar el servidor**
 
 ```bash
@@ -87,15 +89,12 @@ SET isAdmin =  1
 WHERE  user_id  = 1
 
 ```
+
 `el valor de "user_id" va a ser el id del usuario al cual se quiera asignar el rol de Admin`
 
 :eight: **Insertar datos de productos, metodos de pago y estados del pedido en la base de datos**
 
-<<<<<<< HEAD
-_Iniciar sesión con el usuario Admin en el siguiente endpoint:_
-=======
 _Primero necesita iniciar sesión con el usuario Admin para obtener el token:_
->>>>>>> 65a0c11b0446f7022826e6341f5bd2d120ecb552
 
 `POST "http://localhost:3000/auth/login`
 
@@ -108,11 +107,7 @@ _Primero necesita iniciar sesión con el usuario Admin para obtener el token:_
 }
 ```
 
-<<<<<<< HEAD
-_Con el token obtenido en la respuesta ya tenes autorización para hacer un GET al siguiente endpoint:_
-=======
 _Con el token obtenido en la respuesta, ya ténes autorización para hacer un GET al endpoint debajo y de éste modo se van a insertar los datos de productos, metodos de pago y estados del pedido en la base de datos:_
->>>>>>> 65a0c11b0446f7022826e6341f5bd2d120ecb552
 
 `GET "http://localhost:3000"`
 

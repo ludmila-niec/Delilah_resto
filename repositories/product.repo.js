@@ -3,19 +3,28 @@ const { ValidationError } = require("sequelize");
 module.exports = {
     getProducts: async function () {
         try {
-            let products = await Product.findAll({
-                attributes: ["product_id", "name", "price"],
-            });
+            let products = await Product.findAll();
             return products;
         } catch (error) {
             console.log(error);
         }
     },
-    createProduct: async (name, price) => {
+    getProductById: async function (productId) {
+        try {
+            let product = await Product.findByPk(productId);
+            return product;
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    createProduct: async (product) => {
         try {
             let newProduct = await Product.create({
-                name: name,
-                price: price,
+                name: product.name,
+                img: product.img,
+                description: product.description,
+                category_id: product.category_id,
+                price: product.price,
             });
             return newProduct;
         } catch (error) {
@@ -25,12 +34,15 @@ module.exports = {
             console.log(error);
         }
     },
-    modifyProduct: async (name, price, id) => {
+    modifyProduct: async (product, id) => {
         try {
             let updatedProduct = await Product.update(
                 {
-                    name: name,
-                    price: price,
+                    name: product.name,
+                    img: product.img,
+                    description: product.description,
+                    category_id: product.category,
+                    price: product.price,
                 },
                 {
                     where: {

@@ -13,6 +13,12 @@ tags:
   - name: products
     description: Acciones sobre los productos
 
+  - name: categories
+    description: Acciones sobre las categorias de los productos
+
+  - name: favourites
+    description: Acciones sobre los productos favoritos
+
   - name: orders
     description: Acciones sobre los pedidos
 
@@ -86,6 +92,53 @@ paths:
           $ref: "#/components/responses/UnexpectedError"
 
   /products/{idproduct}:
+    get:
+      security:
+        - BearerAuth: []
+      tags:
+        - products
+      summary: Retorna un producto por Id
+      parameters:
+        - name: productId
+          in: path
+          description: Id del producto
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    $ref: "#/components/schemas/Product"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: No se encontró el producto
+        "500":
+          $ref: "#/components/responses/UnexpectedError"
+
     patch:
       security:
         - BearerAuth: []
@@ -94,7 +147,7 @@ paths:
       summary: Modifica un producto por Id
       description: Accion disponible para usuario con rol Admin
       parameters:
-        - name: idproduct
+        - name: productId
           in: path
           description: Id del producto
           required: true
@@ -163,7 +216,7 @@ paths:
       summary: Elimina un producto de las lista de platos
       description: Accion disponible para usuario con rol Admin
       parameters:
-        - name: idproduct
+        - name: productId
           in: path
           description: Id del producto
           required: true
@@ -174,6 +227,247 @@ paths:
       responses:
         "200":
           description: "Producto con id # eliminado exitosamente"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Producto eliminado exitosamente
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "403":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: No se encontró el producto
+        "500":
+          $ref: "#/components/responses/UnexpectedError"
+  /categories:
+    post:
+      security:
+        - BearerAuth: []
+      tags:
+        - categories
+      summary: Crear categoria nueva.
+      description: Acción disponible para usuario con rol Admin.
+      responses:
+        "201":
+          description: Categoria creada exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                    success: 
+                      type: boolean
+                      example: true
+                    message:
+                      type: string
+                      example: Categoria creada exitosamente
+                    data:
+                      type: object
+                      properties:
+                        category_id:
+                          type: integer
+                          format: int64
+                          example: 8
+                        name:
+                          type: string
+                          example: cafeteria
+                        img:
+                          type: string
+                          example: "https://i.ibb.co/FBXK8pt/Coffee.png"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "403":
+          $ref: "#/components/responses/UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/UnexpectedError"
+      requestBody:
+        $ref: "#/components/requestBodies/Category"  
+    get:
+      security:
+        - BearerAuth: []
+      tags:
+        - categories
+      summary: retorna lista de categorias
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Category"
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/UnexpectedError"
+
+  /categories/:categoryId:
+    get:
+      security:
+        - BearerAuth: []
+      tags:
+        - categories
+      summary: Retorna una categoria por Id con sus productos correspondientes a la categoria.
+      parameters:
+        - name: categoryId
+          in: path
+          description: Id de la categoria
+          required: true
+          schema: 
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Category"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: No se encontró la categoria
+        "500":
+          $ref: "#/components/responses/UnexpectedError"  
+  /favourites:
+    post:
+      security:
+        - BearerAuth: []
+      tags:
+        - favourites
+      summary: Agregar producto a la lista de favoritos del usuario.
+      responses:
+        "201":
+          description: "Favorito agregado exitosamente"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Favorito agregado exitosamente
+                  data:
+                    type: object
+                    $ref: "#/components/schemas/Favourite"
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401": 
+          $ref: "#/components/responses/UnauthenticatedError"
+        "403":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: No se encontró elproducto por id
+        "500":
+          $ref: "#/components/responses/UnexpectedError"
+      requestBody:
+        $ref: "#/components/requestBodies/Favourite"
+    get:
+      security:
+        - BearerAuth: []
+      tags:
+        - favourites
+      summary: Retorna una lista con los productos favoritos
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: 
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Product"
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "500":
+          $ref: "#/components/responses/UnexpectedError"
+
+  /favourites/{productId}:
+    delete:
+      security:
+        - BearerAuth: []
+      tags:
+        - favourites
+      summary: Elimina un producto de la lista de favoritos del usuario.
+      parameters:
+        - name: productId
+          in: path
+          description: Id del producto
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        "200":
+          description: "Favorito eliminado exitosamente"
           content:
             application/json:
               schema:
@@ -226,7 +520,7 @@ paths:
                   message:
                     type: string
                     example: Recibimos tu pedido
-                  order_num:
+                  order_id:
                     type: integer
                     format: int64
                     example: 40
@@ -668,9 +962,19 @@ components:
         name:
           type: string
           example: Hamburguesa Clasica
+        img:
+          type: string
+          example: "https://i.ibb.co/qpFY16s/hamburguesa-clasica.png"
+        description: 
+          type: string
+          example: "Hamburguesa con cheddar, tomate, lechuga, cebolla morada, pepinillos, kétchup y mostaza."
         price:
           type: integer
           example: 350
+        category_id:
+          type: integer
+          format: int64
+          example: 1
     ProductOrder:
       type: object
       properties:
@@ -691,6 +995,35 @@ components:
               type: integer
               format: int64
               example: 2
+    Category:
+      type: object
+      properties:
+        category_id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: "hamburguesas"
+        img:
+          type: string
+          example: "https://i.ibb.co/FBXK8pt/Burger.png"
+        products:
+          type: array
+          items:
+            $ref: "#/components/schemas/Product"
+    Favourite:
+      type: object
+      properties: 
+        id:
+          type: integer
+          example: 2
+        user_id:
+          type: integer
+          example: 10
+        product_id:
+          type: integer
+          example: 19
     Order:
       type: object
       properties:
@@ -766,9 +1099,19 @@ components:
               name:
                 type: string
                 example: Hamburguesa Clasica
+              img:
+                type: string
+                example: "https://i.ibb.co/qpFY16s/hamburguesa-clasica.png"
+              description: 
+                type: string
+                example: "Hamburguesa con cheddar, tomate, lechuga, cebolla morada, pepinillos, kétchup y mostaza."
               price:
                 type: integer
                 example: 350
+              category_id:
+                type: integer
+                format: int64
+                example: 1
       description: Objeto del producto que se agrega en la lista de platos
       required: true
     ProductUpdate:
@@ -784,6 +1127,31 @@ components:
                 type: integer
                 example: 400
       description: Objeto para modificar un producto en la lista de platos
+      required: true
+    Category:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                example: cafeteria
+              img:
+                type: string
+                example: "https://i.ibb.co/FBXK8pt/Coffee.png"
+      description: Objeto con nombre e imagen de la nueva categoria a crear.
+      required: true
+    Favourite:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              product_id:
+                type: integer
+                example: 19
+      description: Objeto con el id del producto que se agrega a la lista de favoritos del usuario.
       required: true
     Order:
       content:

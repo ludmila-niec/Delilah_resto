@@ -59,7 +59,8 @@ module.exports = {
             }
             res.status(200).json({ success: true, data: orderById });
         } catch (error) {
-            res.status(500).send("Error en el servidor");
+            console.log(error);
+            res.status(500).send(`Error en el servidor. ${error}`);
         }
     },
     createOrder: async (req, res) => {
@@ -95,10 +96,11 @@ module.exports = {
             res.status(201).json({
                 success: true,
                 message: "Recibimos tu pedido",
-                order_num: orderCreated.order_id,
+                order_id: orderCreated.order_id,
             });
         } catch (error) {
-            res.status(500).send("Error en el servidor " + error);
+            console.log(error);
+            res.status(500).send(`Error en el servidor. ${error}`);
         }
     },
     updateStatus: async (req, res) => {
@@ -124,6 +126,7 @@ module.exports = {
                 message: `Estado del pedido modificado a ${validStatus.dataValues.name}`,
             });
         } catch (error) {
+            console.log(error);
             res.status(500).send(`Error en el servidor. ${error}`);
         }
     },
@@ -142,6 +145,7 @@ module.exports = {
                 message: `Pedido numero ${orderId} eliminado`,
             });
         } catch (error) {
+            console.log(error);
             res.status(500).send(`Error en el servidor. ${error}`);
         }
     },

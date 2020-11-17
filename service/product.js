@@ -1,11 +1,12 @@
 const {
     getProducts,
+    getProductById,
     createProduct,
     modifyProduct,
     deleteProductById,
 } = require("../repositories/product.repo");
 
-const {ValidationError} = require('sequelize')
+const { ValidationError } = require("sequelize");
 
 module.exports = {
     showProducts: async (req, res) => {
@@ -16,10 +17,29 @@ module.exports = {
             res.status(500).send("Error en servidor");
         }
     },
+    showProductById: async (req, res) => {
+        try {
+            const productId = req.params.productId;
+            const productById = await getProductById(productId);
+            if (!productById) {
+                return res.status(404).json({
+                    success: false,
+                    message: "No se encontró el producto por id",
+                });
+            }
+            return res.status(200).json({
+                success: true,
+                data: productById,
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(500).send(`Error en servidor. ${error}`);
+        }
+    },
     createNewProduct: async (req, res, next) => {
         try {
-            let body = req.body;
-            let newProduct = await createProduct(body.name, body.price);
+            let productData = req.body;
+            let newProduct = await createProduct(productData);
             if (newProduct instanceof ValidationError) {
                 return next(newProduct);
             }
@@ -29,19 +49,15 @@ module.exports = {
                 data: newProduct,
             });
         } catch (error) {
-
-            res.status(500).send("Error en servidor");
+            console.log(error);
+            res.status(500).send(`Error en servidor. ${error}`);
         }
     },
     updateProduct: async (req, res, next) => {
         const product = req.body;
-        const productId = req.params.idproduct;
+        const productId = req.params.productId;
         try {
-            let productModified = await modifyProduct(
-                product.name,
-                product.price,
-                productId
-            );
+            let productModified = await modifyProduct(product, productId);
             console.log(productModified);
             if (productModified[0] === 0) {
                 return res.status(404).json({
@@ -58,11 +74,11 @@ module.exports = {
                 data: product,
             });
         } catch (error) {
-            res.status(500).send("Error en servidor");
+            res.status(500).send(`Error en servidor. ${error}`);
         }
     },
     deleteProduct: async (req, res) => {
-        const productId = req.params.idproduct;
+        const productId = req.params.productId;
         try {
             let product = await deleteProductById(productId);
             if (product != 1) {
@@ -77,7 +93,7 @@ module.exports = {
                 message: `Producto con id ${productId} eliminado exitosamente`,
             });
         } catch (error) {
-            res.status(500).send("Error en servidor");
+            res.status(500).send(`Error en servidor. ${error}`);
         }
     },
 };
