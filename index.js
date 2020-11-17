@@ -14,6 +14,7 @@ app.use(express.json());
 const dataRoute = require("./routes/data");
 const userRoute = require("./routes/user");
 const productRoute = require("./routes/product");
+const categories = require("./routes/category");
 const favourites = require("./routes/favourite");
 const orderRoutes = require("./routes/order");
 const authRoutes = require("./routes/auth");
@@ -21,6 +22,7 @@ app.use("/", dataRoute);
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoute);
 app.use("/api/products", productRoute);
+app.use("/api/categories", categories);
 app.use("/api/favourites", favourites);
 app.use("/api/orders", orderRoutes);
 

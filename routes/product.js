@@ -3,16 +3,11 @@ const { authAdmin, authUser } = require("../middleware/auth");
 const {
     showProducts,
     showProductById,
-    showProductsByCategory,
     createNewProduct,
-    createNewCategory,
     updateProduct,
     deleteProduct,
 } = require("../service/product");
-const {
-    validateProductInput,
-    validateNewCategoryInput,
-} = require("../middleware/product");
+const { validateProductInput } = require("../middleware/product");
 
 //retornar todos los productos
 //accesible para usuarios y admin
@@ -22,22 +17,9 @@ router.get("/", authUser, showProducts);
 //accesible para usuarios y admin
 router.get("/:productId", authUser, showProductById);
 
-//retornar todos los productos por categoria
-//accesible para usuarios y admin
-router.get("/category/:categoryId", authUser, showProductsByCategory);
-
 //crear producto
 //accesible solo admin
 router.post("/", authAdmin, validateProductInput, createNewProduct);
-
-//crear categoria nueva para productos
-//accesible solo admin
-router.post(
-    "/category",
-    authAdmin,
-    validateNewCategoryInput,
-    createNewCategory
-);
 
 //modificar producto
 //accesible solo admin

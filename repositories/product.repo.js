@@ -1,5 +1,4 @@
 const Product = require("../database/models/Product");
-const ProductCategory = require("../database/models/ProductCategory");
 const { ValidationError } = require("sequelize");
 module.exports = {
     getProducts: async function () {
@@ -18,18 +17,6 @@ module.exports = {
             console.log(error);
         }
     },
-    getProductsByCategory: async function (categoryId) {
-        try {
-            let products = await Product.findAll({
-                where: {
-                    category_id: categoryId,
-                },
-            });
-            return products;
-        } catch (error) {
-            console.log(error);
-        }
-    },
     createProduct: async (product) => {
         try {
             let newProduct = await Product.create({
@@ -40,20 +27,6 @@ module.exports = {
                 price: product.price,
             });
             return newProduct;
-        } catch (error) {
-            if (error instanceof ValidationError) {
-                return error;
-            }
-            console.log(error);
-        }
-    },
-    createCategory: async function (category) {
-        try {
-            const newCategory = await ProductCategory.create({
-                name: category.name,
-                img: category.img,
-            });
-            return newCategory;
         } catch (error) {
             if (error instanceof ValidationError) {
                 return error;

@@ -4,6 +4,7 @@ const {
     deleteFavourite,
 } = require("../repositories/favourite.repo");
 
+const { getProductById } = require("../repositories/product.repo");
 module.exports = {
     showFavourites: async (req, res) => {
         try {
@@ -24,6 +25,14 @@ module.exports = {
             //id del usuario para agregar producto por id a sus favoritos
             const userId = req.userId;
             const productId = req.body.product_id;
+            //check si el producto existe
+            const realProduct = await getProductById(productId);
+            if (!realProduct) {
+                return res.status(404).json({
+                    success: false,
+                    message: "No se encontró el producto por id",
+                });
+            }
             const newFavourite = await addFavourite(userId, productId);
             return res.status(201).json({
                 success: true,

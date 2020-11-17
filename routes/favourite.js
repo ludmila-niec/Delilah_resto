@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const { authUser } = require("../middleware/auth");
+const { validateNewFavouriteInput } = require("../middleware/favourite");
 const {
     showFavourites,
     addFavourite,
@@ -10,7 +11,7 @@ const {
 router.get("/", authUser, showFavourites);
 
 //add new favourite to user account
-router.post("/", authUser, addFavourite);
+router.post("/", authUser, validateNewFavouriteInput, addFavourite);
 
 //delete favourite from user account
 router.delete("/:productId", authUser, deleteFavourite);
