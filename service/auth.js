@@ -84,7 +84,12 @@ module.exports = {
             );
             return res
                 .status(200)
-                .json({ success: true, message: "Login exitoso", token });
+                .json({
+                    success: true,
+                    message: "Login exitoso",
+                    user: userExists,
+                    token,
+                });
         } catch (error) {
             console.log(error);
             res.status(500).json({

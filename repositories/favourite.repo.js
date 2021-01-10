@@ -13,6 +13,7 @@ module.exports = {
                     {
                         model: Product,
                         as: "products",
+                        attributes: ["product_id"],
                         required: false,
                         through: {
                             model: Favourite,
