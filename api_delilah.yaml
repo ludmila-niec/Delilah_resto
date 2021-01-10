@@ -443,7 +443,13 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: "#/components/schemas/Product"
+                      type: object
+                      properties:
+                        product_id:
+                          type: number
+                          example: 4
+
+                      # $ref: "#/components/schemas/Product"
         "401":
           $ref: "#/components/responses/UnauthenticatedError"
         "500":
@@ -941,6 +947,9 @@ paths:
                   message:
                     type: string
                     example: Login exitoso!
+                  user:
+                    type: object
+                    $ref: '#/components/schemas/User'
                   token:
                     type: string
                     example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
